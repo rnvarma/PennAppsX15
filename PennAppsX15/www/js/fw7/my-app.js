@@ -116,6 +116,12 @@ myApp.onPageInit('home', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+    var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    activitiesURL = "/1/getactivities/" + USER_DATA.fb_toke;
+    xmlHttp.open("GET",activitiesURL, false);
+    xmlHttp.send();
+    console.log("hi did i even do anything");
 
 });
 
