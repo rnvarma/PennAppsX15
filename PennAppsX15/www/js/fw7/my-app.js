@@ -50,6 +50,7 @@ myApp.onPageInit('create', function (page) {
     );
     */
 
+    /*
     // Allow input of starting point
     navigator.geolocation.getCurrentPosition(
             function(position) {
@@ -74,6 +75,18 @@ myApp.onPageInit('create', function (page) {
                             'message: ' + error.message + '\n');
             }
         );
+    */
+    $$('#submit').on("click", function () {
+        console.log("hello!!!");
+        var data = {
+                name: $$('#activity-name').val(),
+                start: $$('#activity-start').val(),
+                type: $$('#activity-type').val()
+            };
+        console.log(data);
+        $$.post("http://httpbin.org/post", data, function(d) {console.log("reply: "+d);});
+//                    $$('#ajax-submit').submit();
+    });
 });
 
 myApp.onPageInit('home', function (page) {
