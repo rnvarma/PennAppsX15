@@ -202,6 +202,37 @@ myApp.onPageInit('home', function (page) {
 
             
 
+            // get the profile picture
+
+            var user_img = "http://graph.facebook.com/" + activity["creator"]["fb_toke"] + "/picture";
+
+            var static_img_url = "https://maps.googleapis.com/maps/api/streetview?size=200x200&location=" + activity.meet_location_lat + "," + activity.meet_location_long
+
+            $("#activities-list").append(
+                '<li id="activities" class="swipeout">' +
+                '<a href="sampleevent.html" class="item-link item-content">' +
+                '<div class="swipeout-content">' +
+                '<!-- List element goes here -->' +
+                '<div class="item-content">' +
+                '   <div class="item-media" id="user-post" style="background-image: url('+ user_img + ');"></div>' +
+                '       <div class="item-inner">' +
+                '           <div class="item-title-row">' +
+                '               <div class="item-title">'+ activity.name + '</div>' +
+                '               <div class="item-after"><b>' + displayDate + '</b></div>' +
+                '           </div>' +
+                '<div class="item-subtitle"><i class="fa fa-map-marker"></i> '+ address + '</div>' +
+                '    <div class="item-text">' +
+                '      +3 are going!' +
+                '    </div>' +
+                '  </div>' +
+                '</div>' + 
+                '</div>' +
+                ' <!-- Swipeout actions left -->' +
+                '   <div class="swipeout-actions-right">' +
+                '        <a href="#" class="join">Join</a>' +
+                '   </div>' +
+                '   </a>' +
+                '</li>')
         }
        },
        dataType: "json"
