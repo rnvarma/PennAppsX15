@@ -47,6 +47,7 @@ function updateUserLocation() {
             function(error) {
                 console.log('code: '    + error.code    + '\n' +
                             'message: ' + error.message + '\n');
+                return "failure";
             }
     );
 }
@@ -121,18 +122,19 @@ myApp.onPageInit('home', function (page) {
     $$('#start').on('click', function () {
         // create array to store locations
         var locations = [];
+        var starting = updateUserLocation();
+        locations.push(starting);
+        console.log(starting);
+
         // Start timer
-        var timer = $$.timer(function () {
-            console.log(updateUserLocation());
-            locations.push(updateUserLocation());
+        setInterval(function() {
+            var newLocation = updateUserLocation();
+            console.log(newLocation);
+            locations.push(newLocation);
+        }, 30000);
 
+        $$("#start").html('End');
 
-        });
-
-        timer.set({
-            time : 30000,
-            autostart : true
-        });
     });
 });
 
