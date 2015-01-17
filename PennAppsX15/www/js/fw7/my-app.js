@@ -116,7 +116,24 @@ myApp.onPageInit('home', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+    
+    // timer
+    $$('#start').on('click', function () {
+        // create array to store locations
+        var locations = [];
+        // Start timer
+        var timer = $$.timer(function () {
+            console.log(updateUserLocation());
+            locations.push(updateUserLocation());
 
+
+        });
+
+        timer.set({
+            time : 30000,
+            autostart : true
+        });
+    });
 });
 
 myApp.onPageInit('newsfeed', function (page) {
@@ -144,19 +161,7 @@ myApp.onPageInit('profile', function (page) {
     $(".fb-img").attr("src", img_url);
 });
 
-myApp.onPageInit('sampleevent', function (page) {
-    // Start tracking location at 30 second intervals
-    $$('#start').on('click', function() {
-        // create array to store locations
-        var locations = [];
-        // Start timer
-        $.timer( [ function () {
-            
 
-
-        }] , [ 30000 ], [ true ] )
-    });
-});
 
 // Generate dynamic page
 var dynamicPageIndex = 0;
