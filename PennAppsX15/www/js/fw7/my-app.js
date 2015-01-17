@@ -44,7 +44,9 @@ function updateUserLocation(callback, activity_id) {
                 // Post user's curr location to server
                 $$.post("http://pennappsx15.herokuapp.com/1/currloc", data, function(d) {
                 });
-                callback(data);
+                if (callback){
+                    callback(data);
+                }
             },
             function(error) {
                 console.log('code: '    + error.code    + '\n' +
@@ -113,7 +115,7 @@ myApp.onPageInit('create', function (page) {
                 console.log('code: '    + error.code    + '\n' +
                             'message: ' + error.message + '\n');
             }
-        );    
+        );
 });
 
 myApp.onPageInit('home', function (page) {
@@ -121,7 +123,6 @@ myApp.onPageInit('home', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
-
 
     activitiesURL = "http://pennappsx15.herokuapp.com/1/getactivities/" + USER_DATA.fb_toke;
 
@@ -200,25 +201,41 @@ myApp.onPageInit('home', function (page) {
        },
        dataType: "json"
      });
-    
-    // timer
-    $$('#start').on('click', function () {
+
+    // Helper functions to turn timer on/off
+    var refreshIntervalId; // id for time interval
+    function startTimer() {
+        console.log("Starting timer!");
         // create array to store locations
         var locations = [];
-        var starting = updateUserLocation();
-        locations.push(starting);
-        console.log(starting);
-
-        // Start timer
-        setInterval(function() {
-            var newLocation = updateUserLocation();
-            console.log(newLocation);
-            locations.push(newLocation);
+        updateUserLocation(function (data) {
+            locations.push(data);
+            console.log(data);
+        });
+        // Start interval
+        refreshIntervalId = setInterval(function() {
+            var newLocation = updateUserLocation(function (data) {
+                locations.push(data);
+                console.log(data);
+            });
         }, 30000);
 
+        // Set button action to be able to End timer
         $$("#start").html('End');
-
-    });
+        $$('#start').off('click', startTimer);
+        $$('#start').on('click', endTimer);
+    }
+    function endTimer() {
+        console.log("Stopping timer!");
+        clearInterval(refreshIntervalId); // Clear interval
+        // Set button action to be able to End timer
+        $$("#start").html('Start');
+        $$('#start').off('click', endTimer);
+        $$('#start').on('click', startTimer);
+    }
+    
+    // Initialize timer
+    $$('#start').on('click', startTimer);
 });
 
 myApp.onPageInit('newsfeed', function (page) {
