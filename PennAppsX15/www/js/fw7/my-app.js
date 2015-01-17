@@ -141,6 +141,7 @@ myApp.onPageInit('home', function (page) {
         }, 30000);
 
         // Set button action to be able to End timer
+        $$("#status").append('Activity in progress! Click to end.');
         $$("#start").html('End');
         $$('#start').off('click', startTimer);
         $$('#start').on('click', endTimer);
@@ -149,7 +150,9 @@ myApp.onPageInit('home', function (page) {
         console.log("Stopping timer!");
         clearInterval(refreshIntervalId); // Clear interval
         // Set button action to be able to End timer
-        $$("#start").html('Start');
+        
+        $$("#status").html('Congratulations! You just completed ___ miles.');
+        $$("#start").remove('End');
         $$('#start').off('click', endTimer);
         $$('#start').on('click', startTimer);
     }
