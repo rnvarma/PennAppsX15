@@ -49,6 +49,11 @@
             <!-- Scrollable page content -->
             <div class="page-content">
               <p>Page content goes here</p>
+              <div id="fb-root"></div>
+              <fb:login-button data-size="xlarge" scope="public_profile,email" onlogin="checkLoginState();">
+              </fb:login-button>
+              <div id="status">
+              </div>
               <!-- Link to another page -->
               <a href="about.html">About app</a>
             </div>
@@ -68,5 +73,7 @@
     <script type="text/javascript" src="js/fw7/framework7.min.js"></script>
     <!-- Path to your app js-->
     <script type="text/javascript" src="js/fw7/my-app.js"></script>
+    <!-- Path to fb login js-->
+    <script type="text/javascript" src="js/fb.js"></script>
   </body>
 </html>    
