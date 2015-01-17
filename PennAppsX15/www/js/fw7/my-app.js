@@ -18,6 +18,34 @@ myApp.onPageInit('about', function (page) {
     });
 });
 
+myApp.onPageInit('home', function (page) {
+    // run createContentPage func after link was clicked
+    $$('.create-page').on('click', function () {
+        createContentPage();
+    });
+});
+
+myApp.onPageInit('newsfeed', function (page) {
+    // run createContentPage func after link was clicked
+    $$('.create-page').on('click', function () {
+        createContentPage();
+    });
+});
+
+myApp.onPageInit('leaderboard', function (page) {
+    // run createContentPage func after link was clicked
+    $$('.create-page').on('click', function () {
+        createContentPage();
+    });
+});
+
+myApp.onPageInit('profile', function (page) {
+    // run createContentPage func after link was clicked
+    $$('.create-page').on('click', function () {
+        createContentPage();
+    });
+});
+
 // Generate dynamic page
 var dynamicPageIndex = 0;
 function createContentPage() {
@@ -46,3 +74,12 @@ function createContentPage() {
     );
 	return;
 }
+
+$(".tab-link").click(function() {
+    var mainView = myApp.addView('.view-main')          
+    // Load page from about.html file to main View:
+    myApp.mainView.loadPage($(this).attr("href"));
+    $(".tab-link.active").removeClass("active");
+    $(this).addClass("active");
+})
+

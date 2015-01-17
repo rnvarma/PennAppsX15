@@ -113,3 +113,36 @@ h1 {
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
 }
+
+.badge {
+    position: absolute;
+}
+
+.tab-link {
+    width: 50px
+}
+
+.plus-button-tab {
+    background-color: black;
+    width: 75px;
+}
+
+.plus-button {
+    margin-top: 6px;
+}
+
+.toolbar-inner {
+    padding: 0px;
+}
+
+.tabbar a.active {
+    background-color: #d0d0d0;
+    color: black;
+}
+
+
+
+
+
+
+
