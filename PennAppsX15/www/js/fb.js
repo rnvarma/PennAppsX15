@@ -81,13 +81,13 @@ var USER_DATA;
         success: function(data) {
           // console.log(data);
           USER_DATA = data;
+          // Initialize View
+          var mainView = myApp.addView('.view-main')
+          // Load page from about.html file to main View:
+          myApp.mainView.loadPage('home.html');
         },
         dataType: "json"
       });
       updateUserLocation();
-      // Initialize View          
-      var mainView = myApp.addView('.view-main')          
-      // Load page from about.html file to main View:
-      myApp.mainView.loadPage('home.html');
     });
   }

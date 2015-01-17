@@ -90,6 +90,7 @@ myApp.onPageInit('create', function (page) {
                     draggable:true
                 });
                 marker.setMap(map);
+                $("#map-div").css("width", "100%");
                 $$('#submit').on("click", function () {
                     console.log("Longitude: " + marker.getPosition().D + " Latitude: " + marker.getPosition().k);
                         // Send create request to server
