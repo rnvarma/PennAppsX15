@@ -1610,7 +1610,7 @@ html.retina.ios-gt-7 .content-block-inner {
 }
 .list-block .item-after {
   white-space: nowrap;
-  color: #8e8e93;
+  /*color: #8e8e93;*/
   -webkit-flex-shrink: 0;
   -ms-flex: 0 0 auto;
   flex-shrink: 0;

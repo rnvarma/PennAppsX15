@@ -123,11 +123,6 @@ myApp.onPageInit('home', function (page) {
 
     }
 
-    // Start tracking location at 1 minute intervals
-    $$('#start').on('click', function() {
-        // Start timer
-        $.timer( [ action ] , [ time ], [ autostart ] )
-    });
 });
 
 myApp.onPageInit('newsfeed', function (page) {
@@ -153,6 +148,17 @@ myApp.onPageInit('profile', function (page) {
     var id = USER_DATA.fb_toke;
     var img_url = "http://graph.facebook.com/" + id + "/picture?type=large";
     $(".fb-img").attr("src", img_url);
+});
+
+myApp.onPageInit('sampleevent', function (page) {
+    // Start tracking location at 30 second intervals
+    $$('#start').on('click', function() {
+        // Start timer
+        $.timer( [ function () {
+
+
+        }] , [ 30000 ], [ true ] )
+    });
 });
 
 // Generate dynamic page
