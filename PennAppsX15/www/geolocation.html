@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="css/fw7/framework7.min.css">
     <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="css/fw7/my-app.css">
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
   </head>
   <body>
     <!-- Status bar overlay for full screen mode (PhoneGap) -->
@@ -51,55 +49,24 @@
             <!-- Scrollable page content -->
             <div class="page-content">
               <p>Page content goes here</p>
-              <div id="fb-root"></div>
-              <fb:login-button data-size="xlarge" scope="public_profile,email" onlogin="checkLoginState();">
-              </fb:login-button>
-              <div id="status">
-              </div>
               <!-- Link to another page -->
               <a href="about.html">About app</a>
             </div>
           </div>
         </div>
         <!-- Bottom Toolbar-->
-        <div class="toolbar tabbar tabbar-labels">
-            <div class="toolbar-inner">
-                <a href="home.html" class="tab-link active">
-                    <i class="fa fa-bicycle fa-2x"></i>
-                    <span class="tabbar-label">Activties</span>
-                </a>
-                <a href="newsfeed.html" class="tab-link" style="padding-right:6px;">
-                    <i class="fa fa-rss fa-2x">
-                        <span class="badge bg-red">5</span>
-                    </i>
-                    <span class="tabbar-label">Newsfeed</span>
-                </a>
-                <a href="#tab3" class="tab-link plus-button-tab">
-                    <i class="fa fa-plus fa-2x plus-button"></i>
-                </a>
-                <a href="leaderboard.html" class="tab-link" style="padding-left:7px;">
-                    <i class="fa fa-bar-chart fa-2x"></i>
-                    <span class="tabbar-label">Leaderboard</span>
-                </a>
-                <a href="profile.html" class="tab-link">
-                    <i class="fa fa-child fa-2x"></i>
-                    <span class="tabbar-label">Profile</span>
-                </a>
-            </div>
+        <div class="toolbar">
+          <div class="toolbar-inner">
+            <!-- Toolbar links -->
+            <a href="#" class="link">Link 1</a>
+            <a href="#" class="link">Link 2</a>
+          </div>
         </div>
       </div>
     </div>
-    <script type="text/javascript" src="js/jquery.js"></script>
     <!-- Path to Framework7 Library JS-->
     <script type="text/javascript" src="js/fw7/framework7.min.js"></script>
-
     <!-- Path to your app js-->
     <script type="text/javascript" src="js/fw7/my-app.js"></script>
-
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs"></script>
-
-    <!-- Path to fb login js-->
-    <script type="text/javascript" src="js/fb.js"></script>
-
   </body>
 </html>    
