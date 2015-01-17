@@ -30,7 +30,7 @@ function routeMap(arr) {
         coords + "&size=400x400&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
 }
 
-function updateUserLocation() {
+function updateUserLocation(callback, activity_id) {
     navigator.geolocation.getCurrentPosition(
             function(position) {
                 var data = {
@@ -38,15 +38,18 @@ function updateUserLocation() {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
+                if (activity_id !== undefined) {
+                    // Update activity location
+                }
                 // Post user's curr location to server
                 $$.post("http://pennappsx15.herokuapp.com/1/currloc", data, function(d) {
                 });
-                
-                return data;
+                callback(data);
             },
             function(error) {
                 console.log('code: '    + error.code    + '\n' +
                             'message: ' + error.message + '\n');
+                callback(error);
             }
     );
 }
