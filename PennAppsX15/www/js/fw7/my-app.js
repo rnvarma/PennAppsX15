@@ -34,16 +34,19 @@ function updateUserLocation() {
     navigator.geolocation.getCurrentPosition(
             function(position) {
                 var data = {
+                    id: USER_DATA.fb_toke,
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
                 console.log("New location! Lat: "+ data.lat + " Lng: " + data.lng);
-                /*
+                
+                // Post user's curr location to server
                 $$.post("http://pennappsx15.herokuapp.com/1/currloc", data, function(d) {
                     console.log("reply: "+d);
                     alert("Your activity was successfully created!");
                 });
-                */
+                
+                return data;
             },
             function(error) {
                 console.log('code: '    + error.code    + '\n' +
@@ -117,11 +120,6 @@ myApp.onPageInit('home', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
-
-    // Function that tracks geolocation at each interval point
-    function track() {
-
-    }
 
 });
 
