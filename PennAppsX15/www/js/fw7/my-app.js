@@ -31,7 +31,28 @@ function routeMap(arr) {
 }
 
 function updateUserLocation() {
-
+    navigator.geolocation.getCurrentPosition(
+            function(position) {
+                var data = {
+                    id: USER_DATA.fb_toke,
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                console.log("New location! Lat: "+ data.lat + " Lng: " + data.lng);
+                
+                // Post user's curr location to server
+                $$.post("http://pennappsx15.herokuapp.com/1/currloc", data, function(d) {
+                    console.log("reply: "+d);
+                    alert("Your activity was successfully created!");
+                });
+                
+                return data;
+            },
+            function(error) {
+                console.log('code: '    + error.code    + '\n' +
+                            'message: ' + error.message + '\n');
+            }
+    );
 }
 
 
@@ -74,14 +95,14 @@ myApp.onPageInit('create', function (page) {
                         // Send create request to server
                         var data = {
                                 name: $$('#activity-name').val(),
-                                start: $$('#activity-start-time').val(),
+                                start_date_time: $$('#activity-start-time').val(),
                                 type: $$('#activity-type').val(),
                                 meet_location_lat: position.coords.latitude,
                                 meet_location_long: position.coords.longitude,
                                 id: USER_DATA.fb_toke
                             };
                         console.log(data);
-                        $$.post("http://httpbin.org/post", data, function(d) {
+                        $$.post("http://pennappsx15.herokuapp.com/1/activity", data, function(d) {
                             console.log("reply: "+d);
                             alert("Your activity was successfully created!");
                         });
@@ -99,11 +120,6 @@ myApp.onPageInit('home', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
-
-    // Function that tracks geolocation at each interval point
-    function track() {
-
-    }
 
 });
 
