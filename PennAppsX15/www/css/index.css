@@ -41,8 +41,8 @@ body {
     height:100%;
     margin:0px;
     padding:0px;
-    text-transform:uppercase;
     width:100%;
+    letter-spacing:0.2px;
 }
 
 /* Portrait layout (default) */
@@ -140,8 +140,29 @@ h1 {
     color: black;
 }
 
+.list-block li {
+    height:110px;
+}
 
+.item-title {
+    font-size:110%;
+    font-family:'HelveticaNeue', Helvetica, Arial, sans-serif;
+}
 
+.item-after {
+    font-size:110%;
+    font-weight:none;
+    font-family: 'HelveticaNeue', Helvetica, Arial, sans-serif;
+    color:#b70000;
+}
+
+.item-subtitle{
+ 
+}
+
+.item-text {
+    
+}
 
 
 
