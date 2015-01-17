@@ -102,6 +102,10 @@ myApp.onPageInit('profile', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+    var name = USER_DATA.name;
+    var id = USER_DATA.fb_toke;
+    var img_url = "http://graph.facebook.com/" + id + "/picture?type=large"
+    $(".fb-img").attr("src", img_url);
 });
 
 // Generate dynamic page
@@ -136,7 +140,7 @@ function createContentPage() {
 $(".tab-link").click(function() {
     var mainView = myApp.addView('.view-main')          
     // Load page from about.html file to main View:
-    myApp.mainView.loadPage($(this).attr("href"));
+    myApp.mainView.router.loadPage({url: $(this).attr("href"), animatePages:false});
     $(".tab-link.active").removeClass("active");
     $(this).addClass("active");
 })

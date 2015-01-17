@@ -1,4 +1,7 @@
-  // This is called with the results from from FB.getLoginStatus().
+
+var USER_DATA;
+  
+// This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
     // The response object is returned with a status field that lets the
     // app know the current login status of the person.
@@ -70,7 +73,17 @@
   // Here we run a very simple test of the Graph API after login is
   // successful.  See statusChangeCallback() for when this call is made.
   function testAPI() {
-    FB.api('/me', function(response) {
+    FB.api('/me', function(r) {
+      var url = "http://pennappsx15.herokuapp.com/1/login/" + r.id + "/" + r.first_name + "/" + r.last_name
+      $.ajax({
+        url: url,
+        crossDomain: true,
+        success: function(data) {
+          // console.log(data);
+          USER_DATA = data;
+        },
+        dataType: "json"
+      });
       // Initialize View          
       var mainView = myApp.addView('.view-main')          
       // Load page from about.html file to main View:
