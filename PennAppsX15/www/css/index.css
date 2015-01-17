@@ -223,3 +223,13 @@ a .join {
     background-color:#FFA812;
 }
 
+.event-page-activity-img {
+    height: 65px;
+    margin-top: 7px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 50px;
+}
+
+
+

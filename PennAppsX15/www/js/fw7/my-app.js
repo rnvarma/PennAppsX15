@@ -144,7 +144,6 @@ myApp.onPageInit('home', function (page) {
                 crossDomain: true,
                 success: function(input) {
                     address = input.results[0].formatted_address;
-                    $(".item-subtitle").text(address);
                     // the date is formatted differently in the database
                     var splitEventDate = activity["start_date_time"].split("T");
                     var splitDate = splitEventDate[0].split("-");
