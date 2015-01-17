@@ -18,7 +18,7 @@ function staticMap(lat, lon) {
         "&zoom=14&size=400x400&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
 }
 
-//path=color:0x0000ff|weight:5|40.737102,-73.990318|40.749825,-73.987963|40.752946,-73.987384|40.755823,-73.986397
+//e.g. path=color:0x0000ff|weight:5|40.737102,-73.990318|40.749825,-73.987963|40.752946,-73.987384|40.755823,-73.986397
 // Takes list of coord tuples [lat, long] in route 
 // Returns Google static map
 function routeMap(arr) {
@@ -50,13 +50,14 @@ myApp.onPageInit('create', function (page) {
     );
     */
 
+    /*
     // Allow input of starting point
     navigator.geolocation.getCurrentPosition(
             function(position) {
                 var latlong = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                 var mapOptions = {
                   center: latlong,
-                  zoom: 7
+                  zoom: 12
                 };
                 var map = new google.maps.Map(document.getElementById('map-div'), mapOptions);
                 var marker = new google.maps.Marker({
@@ -74,6 +75,18 @@ myApp.onPageInit('create', function (page) {
                             'message: ' + error.message + '\n');
             }
         );
+    */
+    $$('#submit').on("click", function () {
+        console.log("hello!!!");
+        var data = {
+                name: $$('#activity-name').val(),
+                start: $$('#activity-start').val(),
+                type: $$('#activity-type').val()
+            };
+        console.log(data);
+        $$.post("http://httpbin.org/post", data, function(d) {console.log("reply: "+d);});
+//                    $$('#ajax-submit').submit();
+    });
 });
 
 myApp.onPageInit('home', function (page) {
