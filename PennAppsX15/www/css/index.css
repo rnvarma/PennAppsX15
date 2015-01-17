@@ -140,6 +140,24 @@ h1 {
     color: black;
 }
 
+.fb-img-wrapper {
+    border-radius: 100px;
+    background-color: black;
+}
+
+.fb-img {
+    width: 91%;
+    margin-left: 8px;
+    margin-top: 4px;
+    border-radius: 150px;
+}
+
+
+
+
+
+
+
 
 
 

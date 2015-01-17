@@ -102,6 +102,10 @@ myApp.onPageInit('profile', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+    var name = USER_DATA.name;
+    var id = USER_DATA.fb_toke;
+    var img_url = "http://graph.facebook.com/" + id + "/picture?type=large"
+    $(".fb-img").attr("src", img_url);
 });
 
 // Generate dynamic page
