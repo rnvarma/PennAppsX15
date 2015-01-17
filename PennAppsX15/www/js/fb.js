@@ -75,5 +75,6 @@
       var mainView = myApp.addView('.view-main')          
       // Load page from about.html file to main View:
       myApp.mainView.loadPage('home.html');
+      console.log(response);
     });
   }
