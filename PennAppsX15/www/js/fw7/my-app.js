@@ -44,7 +44,9 @@ function updateUserLocation(callback, activity_id) {
                 // Post user's curr location to server
                 $$.post("http://pennappsx15.herokuapp.com/1/currloc", data, function(d) {
                 });
-                callback(data);
+                if (callback){
+                    callback(data);
+                }
             },
             function(error) {
                 console.log('code: '    + error.code    + '\n' +
