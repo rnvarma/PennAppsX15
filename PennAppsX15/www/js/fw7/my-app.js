@@ -30,7 +30,7 @@ function routeMap(arr) {
         coords + "&size=400x400&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
 }
 
-function updateUserLocation() {
+function updateUserLocation(callback, activity_id) {
     navigator.geolocation.getCurrentPosition(
             function(position) {
                 var data = {
@@ -38,15 +38,19 @@ function updateUserLocation() {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
+                if (activity_id !== undefined) {
+                    // Update activity location
+                }
                 // Post user's curr location to server
                 $$.post("http://pennappsx15.herokuapp.com/1/currloc", data, function(d) {
                 });
-                
-                return data;
+                callback(data);
             },
             function(error) {
                 console.log('code: '    + error.code    + '\n' +
                             'message: ' + error.message + '\n');
+
+                callback(error);
             }
     );
 }
@@ -86,6 +90,7 @@ myApp.onPageInit('create', function (page) {
                     draggable:true
                 });
                 marker.setMap(map);
+                $("#map-div").css("width", "100%");
                 $$('#submit').on("click", function () {
                     console.log("Longitude: " + marker.getPosition().D + " Latitude: " + marker.getPosition().k);
                         // Send create request to server
@@ -116,13 +121,32 @@ myApp.onPageInit('home', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+
     var xmlHttp = null;
     xmlHttp = new XMLHttpRequest();
     activitiesURL = "/1/getactivities/" + USER_DATA.fb_toke;
     xmlHttp.open("GET",activitiesURL, false);
     xmlHttp.send();
     console.log("hi did i even do anything");
+    
+    // timer
+    $$('#start').on('click', function () {
+        // create array to store locations
+        var locations = [];
+        var starting = updateUserLocation();
+        locations.push(starting);
+        console.log(starting);
 
+        // Start timer
+        setInterval(function() {
+            var newLocation = updateUserLocation();
+            console.log(newLocation);
+            locations.push(newLocation);
+        }, 30000);
+
+        $$("#start").html('End');
+
+    });
 });
 
 myApp.onPageInit('newsfeed', function (page) {
@@ -150,19 +174,7 @@ myApp.onPageInit('profile', function (page) {
     $(".fb-img").attr("src", img_url);
 });
 
-myApp.onPageInit('sampleevent', function (page) {
-    // Start tracking location at 30 second intervals
-    $$('#start').on('click', function() {
-        // create array to store locations
-        var locations = [];
-        // Start timer
-        $.timer( [ function () {
-            
 
-
-        }] , [ 30000 ], [ true ] )
-    });
-});
 
 // Generate dynamic page
 var dynamicPageIndex = 0;
