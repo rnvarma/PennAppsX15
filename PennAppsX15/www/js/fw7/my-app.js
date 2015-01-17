@@ -181,7 +181,7 @@ myApp.onPageInit('profile', function (page) {
     });
     var name = USER_DATA.name;
     var id = USER_DATA.fb_toke;
-    var img_url = "http://graph.facebook.com/" + id + "/picture?type=large";
+    var img_url = "http://graph.facebook.com/" + id + "/picture?width=200&height=200";
     $(".fb-img").attr("src", img_url);
 });
 

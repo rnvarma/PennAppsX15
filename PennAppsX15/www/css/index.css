@@ -203,4 +203,8 @@ h1 {
     font-weight:none;
 }
 
-
+.profile-name {
+    font-size: 350%;
+    text-align: center;
+    margin-top: 22px;
+}
