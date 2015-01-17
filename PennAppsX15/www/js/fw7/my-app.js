@@ -31,7 +31,24 @@ function routeMap(arr) {
 }
 
 function updateUserLocation() {
-
+    navigator.geolocation.getCurrentPosition(
+            function(position) {
+                var data = {
+                    id: USER_DATA.fb_toke,
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                // Post user's curr location to server
+                $$.post("http://pennappsx15.herokuapp.com/1/currloc", data, function(d) {
+                });
+                
+                return data;
+            },
+            function(error) {
+                console.log('code: '    + error.code    + '\n' +
+                            'message: ' + error.message + '\n');
+            }
+    );
 }
 
 
@@ -74,14 +91,14 @@ myApp.onPageInit('create', function (page) {
                         // Send create request to server
                         var data = {
                                 name: $$('#activity-name').val(),
-                                start: $$('#activity-start-time').val(),
+                                start_date_time: $$('#activity-start-time').val(),
                                 type: $$('#activity-type').val(),
                                 meet_location_lat: position.coords.latitude,
                                 meet_location_long: position.coords.longitude,
                                 id: USER_DATA.fb_toke
                             };
                         console.log(data);
-                        $$.post("http://httpbin.org/post", data, function(d) {
+                        $$.post("http://pennappsx15.herokuapp.com/1/activity", data, function(d) {
                             console.log("reply: "+d);
                             alert("Your activity was successfully created!");
                         });
@@ -100,16 +117,6 @@ myApp.onPageInit('home', function (page) {
         createContentPage();
     });
 
-    // Function that tracks geolocation at each interval point
-    function track() {
-
-    }
-
-    // Start tracking location at 1 minute intervals
-    $$('#start').on('click', function() {
-        // Start timer
-        $.timer( [ action ] , [ time ], [ autostart ] )
-    });
 });
 
 myApp.onPageInit('newsfeed', function (page) {
@@ -135,6 +142,20 @@ myApp.onPageInit('profile', function (page) {
     var id = USER_DATA.fb_toke;
     var img_url = "http://graph.facebook.com/" + id + "/picture?type=large";
     $(".fb-img").attr("src", img_url);
+});
+
+myApp.onPageInit('sampleevent', function (page) {
+    // Start tracking location at 30 second intervals
+    $$('#start').on('click', function() {
+        // create array to store locations
+        var locations = [];
+        // Start timer
+        $.timer( [ function () {
+            
+
+
+        }] , [ 30000 ], [ true ] )
+    });
 });
 
 // Generate dynamic page

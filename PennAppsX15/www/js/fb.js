@@ -84,6 +84,7 @@ var USER_DATA;
         },
         dataType: "json"
       });
+      updateUserLocation();
       // Initialize View          
       var mainView = myApp.addView('.view-main')          
       // Load page from about.html file to main View:
