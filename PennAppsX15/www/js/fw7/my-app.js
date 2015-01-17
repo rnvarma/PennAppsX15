@@ -147,8 +147,11 @@ myApp.onPageInit('profile', function (page) {
 myApp.onPageInit('sampleevent', function (page) {
     // Start tracking location at 30 second intervals
     $$('#start').on('click', function() {
+        // create array to store locations
+        var locations = [];
         // Start timer
         $.timer( [ function () {
+            
 
 
         }] , [ 30000 ], [ true ] )
