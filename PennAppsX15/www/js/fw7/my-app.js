@@ -1,5 +1,7 @@
 // Initialize your app
-var myApp = new Framework7();
+var myApp = new Framework7({
+    template7Pages: true
+});
 
 // Export selectors engine
 var $$ = Dom7;
@@ -143,31 +145,63 @@ myApp.onPageInit('home', function (page) {
                 success: function(input) {
                     address = input.results[0].formatted_address;
                     $(".item-subtitle").text(address);
+                    // the date is formatted differently in the database
+                    var splitEventDate = activity["start_date_time"].split("T");
+                    var splitDate = splitEventDate[0].split("-");
+                    var splitTime = splitEventDate[1].split(":");
+                    var getCurrDate = new Date();
+
+                    // calculate minute, hour, and day difference
+                    var minuteDiff = parseInt(splitTime[1]) - getCurrDate.getMinutes();
+                    var hourDiff = parseInt(splitTime[0]) - getCurrDate.getHours();
+                    var dayDiff = parseInt(splitDate[2]) - getCurrDate.getDate();
+
+                    // by default, the time is in minutes
+
+                    var displayDate = minuteDiff.toString() + " mins";
+
+                    if (dayDiff > 0) {
+                        displayDate = dayDiff.toString() + " days";
+                    }
+                    else if (hourDiff > 0) {
+                        displayDate = hourDiff.toString() + " hrs";
+                    }
+
+                    activity['timeuntil'] = displayDate;
+                    activity['address'] = address
+
+                    var static_img_url = "https://maps.googleapis.com/maps/api/streetview?size=200x200&location=" + activity.meet_location_lat + "," + activity.meet_location_long
+
+                    $("#activities-list").append(
+                        '<li id="activities" class="swipeout">' +
+                        "<a href='sampleevent.html' class='item-link item-content' data-context='" + JSON.stringify(activity) + "'>" +
+                        '<div class="swipeout-content">' +
+                        '<!-- List element goes here -->' +
+                        '<div class="item-content">' +
+                        '   <div class="item-media"><img src="' + static_img_url + '" width="30px"></div>' +
+                        '       <div class="item-inner">' +
+                        '           <div class="item-title-row">' +
+                        '               <div class="item-title">'+ activity.name + '</div>' +
+                        '               <div class="item-after"><b>' + displayDate + '</b></div>' +
+                        '           </div>' +
+                        '<div class="item-subtitle"><i class="fa fa-map-marker"></i> '+ address + '</div>' +
+                        '    <div class="item-text">' +
+                        '      +3 are going!' +
+                        '    </div>' +
+                        '  </div>' +
+                        '</div>' + 
+                        '</div>' +
+                        ' <!-- Swipeout actions left -->' +
+                        '   <div class="swipeout-actions-right">' +
+                        '        <a href="#" class="join">Join</a>' +
+                        '   </div>' +
+                        '   </a>' +
+                        '</li>')
                 },
                 dataType:"json"
             });
 
-            // the date is formatted differently in the database
-            var splitEventDate = activity["start_date_time"].split("T");
-            var splitDate = splitEventDate[0].split("-");
-            var splitTime = splitEventDate[1].split(":");
-            var getCurrDate = new Date();
-
-            // calculate minute, hour, and day difference
-            var minuteDiff = parseInt(splitTime[1]) - getCurrDate.getMinutes();
-            var hourDiff = parseInt(splitTime[0]) - getCurrDate.getHours();
-            var dayDiff = parseInt(splitDate[2]) - getCurrDate.getDate();
-
-            // by default, the time is in minutes
-
-            var displayDate = minuteDiff.toString() + " mins";
-
-            if (dayDiff > 0) {
-                displayDate = dayDiff.toString() + " days";
-            }
-            else if (hourDiff > 0) {
-                displayDate = hourDiff.toString() + " hrs";
-            }
+            
 
             // get the profile picture
 
@@ -224,6 +258,7 @@ myApp.onPageInit('home', function (page) {
         }, 30000);
 
         // Set button action to be able to End timer
+        $$("#status").append('Activity in progress! Click to end.');
         $$("#start").html('End');
         $$('#start').off('click', startTimer);
         $$('#start').on('click', endTimer);
@@ -232,7 +267,9 @@ myApp.onPageInit('home', function (page) {
         console.log("Stopping timer!");
         clearInterval(refreshIntervalId); // Clear interval
         // Set button action to be able to End timer
-        $$("#start").html('Start');
+        
+        $$("#status").html('Congratulations! You just completed ___ miles.');
+        $$("#start").remove('End');
         $$('#start').off('click', endTimer);
         $$('#start').on('click', startTimer);
     }
@@ -264,6 +301,13 @@ myApp.onPageInit('profile', function (page) {
     var id = USER_DATA.fb_toke;
     var img_url = "http://graph.facebook.com/" + id + "/picture?width=200&height=200";
     $(".fb-img").attr("src", img_url);
+});
+
+myApp.onPageInit('sampleevent', function (page) {
+    // run createContentPage func after link was clicked
+    $$('.create-page').on('click', function () {
+        createContentPage();
+    });
 });
 
 
