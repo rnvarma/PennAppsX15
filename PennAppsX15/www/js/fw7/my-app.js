@@ -125,15 +125,17 @@ myApp.onPageInit('home', function (page) {
     $$('#start').on('click', function () {
         // create array to store locations
         var locations = [];
-        var starting = updateUserLocation();
-        locations.push(starting);
-        console.log(starting);
+        updateUserLocation(function (data) {
+            locations.push(data);
+            console.log(data);
+        });
 
         // Start timer
         setInterval(function() {
-            var newLocation = updateUserLocation();
-            console.log(newLocation);
-            locations.push(newLocation);
+            var newLocation = updateUserLocation(function (data) {
+                locations.push(data);
+                console.log(data);
+            });
         }, 30000);
 
         $$("#start").html('End');
