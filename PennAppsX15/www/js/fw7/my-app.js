@@ -30,6 +30,10 @@ function routeMap(arr) {
         coords + "&size=400x400&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
 }
 
+function updateUserLocation() {
+
+}
+
 
 // Callbacks to run specific code for specific pages, for example for About page:
 myApp.onPageInit('create', function (page) {
@@ -50,7 +54,6 @@ myApp.onPageInit('create', function (page) {
     );
     */
 
-    /*
     // Allow input of starting point
     navigator.geolocation.getCurrentPosition(
             function(position) {
@@ -68,31 +71,44 @@ myApp.onPageInit('create', function (page) {
                 marker.setMap(map);
                 $$('#submit').on("click", function () {
                     console.log("Longitude: " + marker.getPosition().D + " Latitude: " + marker.getPosition().k);
+                        // Send create request to server
+                        var data = {
+                                name: $$('#activity-name').val(),
+                                start: $$('#activity-start-time').val(),
+                                type: $$('#activity-type').val(),
+                                meet_location_lat: position.coords.latitude,
+                                meet_location_long: position.coords.longitude,
+                                id: USER_DATA.fb_toke
+                            };
+                        console.log(data);
+                        $$.post("http://httpbin.org/post", data, function(d) {
+                            console.log("reply: "+d);
+                            alert("Your activity was successfully created!");
+                        });
                 });
             },
             function(error) {
                 console.log('code: '    + error.code    + '\n' +
                             'message: ' + error.message + '\n');
             }
-        );
-    */
-    $$('#submit').on("click", function () {
-        console.log("hello!!!");
-        var data = {
-                name: $$('#activity-name').val(),
-                start: $$('#activity-start').val(),
-                type: $$('#activity-type').val()
-            };
-        console.log(data);
-        $$.post("http://httpbin.org/post", data, function(d) {console.log("reply: "+d);});
-//                    $$('#ajax-submit').submit();
-    });
+        );    
 });
 
 myApp.onPageInit('home', function (page) {
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
+    });
+
+    // Function that tracks geolocation at each interval point
+    function track() {
+
+    }
+
+    // Start tracking location at 1 minute intervals
+    $$('#start').on('click', function() {
+        // Start timer
+        $.timer( [ action ] , [ time ], [ autostart ] )
     });
 });
 
@@ -117,7 +133,7 @@ myApp.onPageInit('profile', function (page) {
     });
     var name = USER_DATA.name;
     var id = USER_DATA.fb_toke;
-    var img_url = "http://graph.facebook.com/" + id + "/picture?type=large"
+    var img_url = "http://graph.facebook.com/" + id + "/picture?type=large";
     $(".fb-img").attr("src", img_url);
 });
 
