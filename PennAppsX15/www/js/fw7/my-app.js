@@ -113,7 +113,7 @@ myApp.onPageInit('create', function (page) {
                 console.log('code: '    + error.code    + '\n' +
                             'message: ' + error.message + '\n');
             }
-        );    
+        );
 });
 
 myApp.onPageInit('home', function (page) {
@@ -121,27 +121,41 @@ myApp.onPageInit('home', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
-    
-    // timer
-    $$('#start').on('click', function () {
+
+    // Helper functions to turn timer on/off
+    var refreshIntervalId; // id for time interval
+    function startTimer() {
+        console.log("Starting timer!");
         // create array to store locations
         var locations = [];
         updateUserLocation(function (data) {
             locations.push(data);
             console.log(data);
         });
-
-        // Start timer
-        setInterval(function() {
+        // Start interval
+        refreshIntervalId = setInterval(function() {
             var newLocation = updateUserLocation(function (data) {
                 locations.push(data);
                 console.log(data);
             });
         }, 30000);
 
+        // Set button action to be able to End timer
         $$("#start").html('End');
-
-    });
+        $$('#start').off('click', startTimer);
+        $$('#start').on('click', endTimer);
+    }
+    function endTimer() {
+        console.log("Stopping timer!");
+        clearInterval(refreshIntervalId); // Clear interval
+        // Set button action to be able to End timer
+        $$("#start").html('Start');
+        $$('#start').off('click', endTimer);
+        $$('#start').on('click', startTimer);
+    }
+    
+    // Initialize timer
+    $$('#start').on('click', startTimer);
 });
 
 myApp.onPageInit('newsfeed', function (page) {
