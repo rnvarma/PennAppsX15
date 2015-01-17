@@ -156,6 +156,18 @@ h1 {
     color:#b70000;
 }
 
+.fb-img-wrapper {
+    border-radius: 100px;
+    background-color: black;
+}
+
+.fb-img {
+    width: 91%;
+    margin-left: 8px;
+    margin-top: 4px;
+    border-radius: 150px;
+}
+
 .item-subtitle{
  
 }

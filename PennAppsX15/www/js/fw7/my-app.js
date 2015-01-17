@@ -18,7 +18,7 @@ function staticMap(lat, lon) {
         "&zoom=14&size=400x400&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
 }
 
-//path=color:0x0000ff|weight:5|40.737102,-73.990318|40.749825,-73.987963|40.752946,-73.987384|40.755823,-73.986397
+//e.g. path=color:0x0000ff|weight:5|40.737102,-73.990318|40.749825,-73.987963|40.752946,-73.987384|40.755823,-73.986397
 // Takes list of coord tuples [lat, long] in route 
 // Returns Google static map
 function routeMap(arr) {
@@ -56,7 +56,7 @@ myApp.onPageInit('create', function (page) {
                 var latlong = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                 var mapOptions = {
                   center: latlong,
-                  zoom: 7
+                  zoom: 12
                 };
                 var map = new google.maps.Map(document.getElementById('map-div'), mapOptions);
                 var marker = new google.maps.Marker({
@@ -102,6 +102,10 @@ myApp.onPageInit('profile', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+    var name = USER_DATA.name;
+    var id = USER_DATA.fb_toke;
+    var img_url = "http://graph.facebook.com/" + id + "/picture?type=large"
+    $(".fb-img").attr("src", img_url);
 });
 
 // Generate dynamic page
@@ -136,7 +140,7 @@ function createContentPage() {
 $(".tab-link").click(function() {
     var mainView = myApp.addView('.view-main')          
     // Load page from about.html file to main View:
-    myApp.mainView.loadPage($(this).attr("href"));
+    myApp.mainView.router.loadPage({url: $(this).attr("href"), animatePages:false});
     $(".tab-link.active").removeClass("active");
     $(this).addClass("active");
 })
