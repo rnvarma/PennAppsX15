@@ -131,7 +131,6 @@ myApp.onPageInit('home', function (page) {
        crossDomain: true,
        success: function(data) {
         for (var i = 0; i < data.length; i++) {
-            console.log(data[i]);
             var activity = data[i];
 
             // get the address from the long/lat coordinates
@@ -170,6 +169,10 @@ myApp.onPageInit('home', function (page) {
                 displayDate = hourDiff.toString() + " hrs";
             }
 
+            // get the profile picture
+
+            var user_img = "http://graph.facebook.com/" + activity["creator"]["fb_toke"] + "/picture";
+
             var static_img_url = "https://maps.googleapis.com/maps/api/streetview?size=200x200&location=" + activity.meet_location_lat + "," + activity.meet_location_long
 
             $("#activities-list").append(
@@ -178,7 +181,7 @@ myApp.onPageInit('home', function (page) {
                 '<div class="swipeout-content">' +
                 '<!-- List element goes here -->' +
                 '<div class="item-content">' +
-                '   <div class="item-media"><img src="' + static_img_url + '" width="30px"></div>' +
+                '   <div class="item-media" id="user-post" style="background-image: url('+ user_img + ');"></div>' +
                 '       <div class="item-inner">' +
                 '           <div class="item-title-row">' +
                 '               <div class="item-title">'+ activity.name + '</div>' +
