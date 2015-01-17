@@ -32,7 +32,7 @@ function routeMap(arr) {
 
 
 // Callbacks to run specific code for specific pages, for example for About page:
-myApp.onPageInit('about', function (page) {
+myApp.onPageInit('create', function (page) {
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
@@ -43,11 +43,14 @@ myApp.onPageInit('about', function (page) {
             {lat: 40.4892106296273, lon: -76.3669714093749},
             {lat: 41.19565802096997, lon: -77.02615109687}
         ];
+    /*
+    // Add map of route
     $$('.content-block').append(
         "<img src='" + routeMap(data) + "'>"
     );
+    */
 
-    /*
+    // Allow input of starting point
     navigator.geolocation.getCurrentPosition(
             function(position) {
                 var latlong = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -71,7 +74,6 @@ myApp.onPageInit('about', function (page) {
                             'message: ' + error.message + '\n');
             }
         );
-    */
 });
 
 myApp.onPageInit('home', function (page) {
