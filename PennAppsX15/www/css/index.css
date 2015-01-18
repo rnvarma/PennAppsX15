@@ -243,3 +243,24 @@ a .join {
 .item-content{
     border-bottom:1px solid #e5e5e5 !important;
 }
+
+.event-page-main {
+    height: initial;
+    padding-top: 20px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: 0px;
+}
+
+.event-status-button {
+    color: black !important;
+    border-color: white;
+    width: 90%;
+    margin-left: 5%;
+    background: white !important;
+}
+
+.event-status-button:focus {
+    outline: 0;
+}
+
