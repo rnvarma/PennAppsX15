@@ -17,13 +17,12 @@
         <div class="preloader"></div>
         <div class="pull-to-refresh-arrow"></div>
       </div>
-      <div class="content-block-inner event-page-main">
+      <div class="content-block-inner event-page-main" style="background-color:{{a_color}}">
         <div>
-          <h1 class="activity-name">{{name}}</h1>
+          <h1 class="activity-name">{{activity_type}}</h1>
         </div>
         <img src="img/{{activity_type}}.png" class="event-page-activity-img">
         <h2 class="activity-start-time"></h2>
-        <h3 class="activity-time-until">Time Left: {{timeuntil}}</h3>
         <div class="activity-address">{{address}}</div>
         <p id = "status">
         </p>
@@ -78,6 +77,7 @@
       <div class="lattitude" style="display:none;" data-lat="{{meet_location_lat}}"></div>
       <div class="longitude" style="display:none;" data-long="{{meet_location_long}}"></div>
       <div class="creator-fb-toke" style="display:none;" data-toke="{{creator.fb_toke}}"></div>
+      <div class="a-color" style="display:none;" data-col="{{a_color}}"></div>
       {{#each participants}}
         <div class="participant-fb-tokes" style="display:none;" data-toke="{{fb_toke}}"></div>
       {{/each}}
