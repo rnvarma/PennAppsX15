@@ -537,6 +537,9 @@ myApp.onPageInit('sampleevent', function (page) {
 
         clearInterval(refreshIntervalId); // Clear interval
         // Set button action to be able to End timer
+
+        // generate completed route map
+        var url = routeMap(routeString);
         
         $$("#status").html('Congratulations! You just completed ___ miles.');
         $$("#start").remove('End');
