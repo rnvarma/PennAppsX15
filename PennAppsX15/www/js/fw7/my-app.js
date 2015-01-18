@@ -12,6 +12,18 @@ var mainView = myApp.addView('.view-main', {
     dynamicNavbar: true
 });
 
+function addRefreshListener() {
+    // Pull to refresh content
+    var ptrContent = $$('.pull-to-refresh-content');
+     
+    // Add 'refresh' listener on it
+    ptrContent.on('refresh', function (e) {
+        setTimeout(function() {
+            myApp.pullToRefreshDone();
+        }, 1000)
+    });
+}
+
 // Returns Google static map centered on given coords
 function staticMap(lat, lon) {
     var coords = lat + "," + lon;
@@ -63,6 +75,7 @@ function updateUserLocation(callback, activity_id) {
 
 // Callbacks to run specific code for specific pages, for example for About page:
 myApp.onPageInit('create', function (page) {
+    addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
@@ -182,6 +195,7 @@ function getAddresses(activity) {
 }
 
 myApp.onPageInit('home', function (page) {
+    addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
@@ -263,6 +277,7 @@ function getNewsfeed(activity) {
 }
 
 myApp.onPageInit('newsfeed', function (page) {
+    addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
@@ -297,6 +312,7 @@ function getCompetitors(activity,number) {
 }
 
 myApp.onPageInit('leaderboard', function (page) {
+    addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
@@ -320,6 +336,7 @@ myApp.onPageInit('leaderboard', function (page) {
 });
 
 myApp.onPageInit('profile', function (page) {
+    addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
@@ -351,6 +368,7 @@ function getStartTimeFromFormattedThing(thing) {
 }
 
 myApp.onPageInit('sampleevent', function (page) {
+    addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();

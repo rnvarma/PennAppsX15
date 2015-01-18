@@ -292,11 +292,23 @@ a .join {
     border-color: #d0d0d0;
 }
 
+.buttons-row .button:first-child {
+    border-radius: 0;
+}
+
+.buttons-row .button:last-child {
+    border-radius: 0;
+}
+
 .profile-tab.active {
-    color: #2ec2c7;
-    background: inherit;
+    color: white;
+    background: #2ec2c7;
 }
 
 .list-block .item-inner {
     border-bottom: none !important;
+}
+
+.pull-to-refresh-layer .preloader {
+    top: 132%;
 }
