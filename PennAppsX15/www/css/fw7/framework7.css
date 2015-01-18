@@ -1165,19 +1165,19 @@ html:not(.watch-active-state) .searchbar.searchbar-active .searchbar-cancel:acti
   z-index: 200;
 }
 .page > .searchbar ~ .page-content {
-  padding-top: 44px;
+  /*padding-top: 44px;*/
 }
 .navbar-fixed .page > .searchbar,
 .navbar-through .page > .searchbar,
 .navbar-fixed > .searchbar,
 .navbar-through > .searchbar {
-  top: 44px;
+  /*top: 44px;*/
 }
 .navbar-fixed .page > .searchbar ~ .page-content,
 .navbar-through .page > .searchbar ~ .page-content,
 .navbar-fixed > .searchbar ~ .page-content,
 .navbar-through > .searchbar ~ .page-content {
-  padding-top: 88px;
+  /*padding-top: 88px;*/
 }
 /* === Message Bar === */
 .messagebar {
@@ -2765,7 +2765,7 @@ input.modal-text-input.modal-text-input-double + input.modal-text-input {
   border-radius: 7px;
 }
 .popover .list-block + .list-block {
-  margin-top: 35px;
+  /*margin-top: 35px;*/
 }
 .popover-angle {
   width: 26px;
