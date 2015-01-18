@@ -199,21 +199,35 @@ myApp.onPageInit('newsfeed', function (page) {
     });
 });
 
+function getCompetitors(activity,number) {
+    var user_img = "http://graph.facebook.com/" + activity["fb_toke"] + "/picture";
+    var name = activity['name'];
+    var totalDistance = activity['distance_traveled'];
+    $("#leaderList").append(
+    '<li class="item-content" style="height: 70px;">' + number +
+    '. <div class="item-media" id="user-post" style="background-image: url('+ user_img + '); margin-left: 15px;"></div>' +
+    '<div class="item-inner"> ' +
+    '<div class="item-title">' + name + '</div>' +
+    '<div class="item-after">' + totalDistance + ' mi</div>' +
+    '</div></li>');
+}
+
 myApp.onPageInit('leaderboard', function (page) {
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
     });
 
-
+    var localURL = "http://pennappsx15.herokuapp.com/1/getleaderboard/" + USER_DATA.fb_toke;
 
     $.ajax({
-    url: activitiesURL,
+    url: localURL,
     crossDomain: true,
     success: function(data) {
-        for (var i = 0; i < data.length; i++) {
-            var activity = data[i];
-            getAddresses(activity);
+        neighbors = data.sort(function(a,b) { return a["distance_traveled"] - b["distance_traveled"] } );
+        for (var i = 0; i < neighbors.length; i++) {
+            var neighbor = neighbors[i];
+            getCompetitors(neighbor,i+1);
         }
     },
     dataType: "json"
