@@ -21,13 +21,9 @@ function staticMap(lat, lon) {
 //e.g. path=color:0x0000ff|weight:5|40.737102,-73.990318|40.749825,-73.987963|40.752946,-73.987384|40.755823,-73.986397
 // Takes list of coord tuples [lat, long] in route 
 // Returns Google static map
-function routeMap(arr) {
-    var coords = "";
-    for (var i in arr) {
-        coords += "|" + arr[i].lat + "," + arr[i].lon;
-    }
+function routeMap(routePath) {
     return "https://maps.googleapis.com/maps/api/staticmap?path=color:0x0000ff|weight:5"+
-        coords + "&size=400x400&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
+        routePath + "&size=400x400&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
 }
 
 function updateUserLocation(callback, activity_id) {
@@ -64,18 +60,6 @@ myApp.onPageInit('create', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
-
-    data = [
-            {lat: 39.943913494072, lon: -75.14748898749997},
-            {lat: 40.4892106296273, lon: -76.3669714093749},
-            {lat: 41.19565802096997, lon: -77.02615109687}
-        ];
-    /*
-    // Add map of route
-    $$('.content-block').append(
-        "<img src='" + routeMap(data) + "'>"
-    );
-    */
 
     // Allow input of starting point
     navigator.geolocation.getCurrentPosition(
@@ -203,13 +187,22 @@ myApp.onPageInit('home', function (page) {
      });
 
     // Helper functions to turn timer on/off
+    var routeString = "";
     var refreshIntervalId; // id for time interval
     function startTimer() {
+
+        /*
+        $$.post("http://pennappsx15.herokuapp.com/1/activitypoints", data, function(d) {
+                            console.log("reply: "+d);
+                            alert("Your activity was successfully created!");
+                        });
+        */
         console.log("Starting timer!");
         // create array to store locations
         var locations = [];
         updateUserLocation(function (data) {
             locations.push(data);
+            routeString = "|" + data.lat + "," + data.lng;
             console.log(data);
         });
         // Start interval
@@ -217,6 +210,14 @@ myApp.onPageInit('home', function (page) {
             var newLocation = updateUserLocation(function (data) {
                 locations.push(data);
                 console.log(data);
+                routeString += "|" + data.lat + "," + data.lng;
+                $$('#static-map').attr("src", routeMap(routeString));
+                /*
+                $$.post("http://pennappsx15.herokuapp.com/1/activitypoints", data, function(d) {
+                            console.log("reply: "+d);
+                            alert("Your activity was successfully created!");
+                });
+                */
             });
         }, 30000);
 
