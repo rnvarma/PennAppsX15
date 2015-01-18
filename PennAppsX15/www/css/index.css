@@ -237,3 +237,14 @@ a .join {
 #activities-list {
     padding-left: 0px;
 }
+
+.event-page-main {
+    height: initial;
+    padding-top: 20px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: 0px;
+}
+
+
+

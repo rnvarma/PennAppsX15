@@ -85,7 +85,10 @@ myApp.onPageInit('create', function (page) {
                 var latlong = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                 var mapOptions = {
                   center: latlong,
-                  zoom: 12
+                  zoom: 12,
+                  scrollwheel:false,
+                  disableDoubleClickZoom: true,
+                  disableDefaultUI: true
                 };
                 var map = new google.maps.Map(document.getElementById('map-div'), mapOptions);
                 var marker = new google.maps.Marker({
@@ -300,13 +303,16 @@ myApp.onPageInit('sampleevent', function (page) {
     var latlong = new google.maps.LatLng(lat, lng);
     var mapOptions = {
       center: latlong,
-      zoom: 12
+      zoom: 12,
+      draggable:false,
+      scrollwheel:false,
+      disableDoubleClickZoom: true,
+      disableDefaultUI: true
     };
     var map = new google.maps.Map(document.getElementById('event-map-div'), mapOptions);
     var marker = new google.maps.Marker({
         position: latlong,
         title:"Starting Point",
-        draggable:false
     });
     marker.setMap(map);
 });
