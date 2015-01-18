@@ -90,7 +90,6 @@ myApp.onPageInit('create', function (page) {
                                 meet_location_long: position.coords.longitude,
                                 id: USER_DATA.fb_toke
                             };
-                        console.log(data);
                         $$.post("http://pennappsx15.herokuapp.com/1/activity", data, function(d) {
                             console.log("reply: "+d);
                             alert("Your activity was successfully created!");
@@ -141,11 +140,10 @@ function getAddresses(activity) {
             activity['timeuntil'] = displayDate;
             activity['address'] = address
 
-            console.log(activity);
-
             var static_img_url = "https://maps.googleapis.com/maps/api/streetview?size=200x200&location=" + activity.meet_location_lat + "," + activity.meet_location_long
 
-            $("#activities-list").append(
+            if (dayDiff > 0 || hourDiff > 0 || minuteDiff > 0) {
+                $("#activities-list").append(
                 '<li id="activities" class="swipeout">' +
                 "<a href='sampleevent.html' class='item-link item-content' data-context='" + JSON.stringify(activity) + "'>" +
                 '<div class="swipeout-content">' +
@@ -170,6 +168,7 @@ function getAddresses(activity) {
                 '   </div>' +
                 '   </a>' +
                 '</li>')
+            }
         },
         dataType:"json"
     });
@@ -208,6 +207,21 @@ myApp.onPageInit('leaderboard', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+
+
+
+    $.ajax({
+    url: activitiesURL,
+    crossDomain: true,
+    success: function(data) {
+        for (var i = 0; i < data.length; i++) {
+            var activity = data[i];
+            getAddresses(activity);
+        }
+    },
+    dataType: "json"
+    });
+
 });
 
 myApp.onPageInit('profile', function (page) {
@@ -226,6 +240,7 @@ myApp.onPageInit('sampleevent', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+
     // Helper functions to turn timer on/off
         var routeString = "";
         var refreshIntervalId; // id for time interval
@@ -251,7 +266,7 @@ myApp.onPageInit('sampleevent', function (page) {
                     locations.push(data);
                     console.log(data);
                     routeString += "|" + data.lat + "," + data.lng;
-                    $$('#static-map').attr("src", routeMap(routeString));
+                    //$$('#static-map').attr("src", routeMap(routeString));
                     /*
                     $$.post("http://pennappsx15.herokuapp.com/1/activitypoints", data, function(d) {
                                 console.log("reply: "+d);
@@ -280,6 +295,22 @@ myApp.onPageInit('sampleevent', function (page) {
         
         // Initialize timer
         $$('#start').on('click', startTimer);
+
+    var lat = parseFloat($(".lattitude").attr("data-lat"));
+    var lng = parseFloat($(".longitude").attr("data-long"));
+
+    var latlong = new google.maps.LatLng(lat, lng);
+    var mapOptions = {
+      center: latlong,
+      zoom: 12
+    };
+    var map = new google.maps.Map(document.getElementById('event-map-div'), mapOptions);
+    var marker = new google.maps.Marker({
+        position: latlong,
+        title:"Starting Point",
+        draggable:false
+    });
+    marker.setMap(map);
 });
 
 
