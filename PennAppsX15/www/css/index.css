@@ -233,3 +233,7 @@ a .join {
     float:right;
     margin-left:0px;
 }
+
+#activities-list {
+    padding-left: 0px;
+}
