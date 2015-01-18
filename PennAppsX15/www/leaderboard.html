@@ -20,11 +20,39 @@
     <div class="page-content">
       <div class="content-block">
         <!-- Each "cells" row should be wrapped with div class="row" -->
-        <div class="row">
-            <!-- Each "cell" has col-[widht in percents] class -->
-            <div class="col-50">Name</div>
-            <div class="col-50">Distance Traveled</div>
+        <div class="content-block">
+    <!-- We specify target sortable list in data-sortable attribute  -->
+    <p><a href="#" data-sortable=".sortable" class="open-sortable">Enable sortable</a></p>
+    <p><a href="#" data-sortable=".sortable" class="close-sortable">Disable sortable</a></p>
+    <p><a href="#" data-sortable=".sortable" class="toggle-sortable">Toggle sortable</a></p>
+</div>
+<!-- Sortable list  -->
+<div class="list-block sortable">
+    <ul>
+      <li>
+        <div class="item-content">
+          <div class="item-media"><i class="icon icon-f7"></i></div>
+          <div class="item-inner">
+            <div class="item-title">Item 1</div>
+            <div class="item-after">$10</div>
+          </div>
         </div>
+        <!-- Sortable handler  -->
+        <div class="sortable-handler"></div>
+      </li>
+      <li>
+        <div class="item-content">
+          <div class="item-media"><i class="icon icon-f7"></i></div>
+          <div class="item-inner">
+            <div class="item-title">Item 2</div>
+            <div class="item-after">$20</div>
+          </div>
+        </div>
+        <div class="sortable-handler"></div>
+      </li>
+      ...
+    </ul>
+</div>
       </div>
     </div>
   </div>
