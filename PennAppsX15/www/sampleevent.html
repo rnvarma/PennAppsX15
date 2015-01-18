@@ -9,20 +9,23 @@
     </div>
   </div>
 </div>
+<div class="activity-id"></div>
 <div class="pages">
-  <div data-page="home" class="page">
+  <div data-page="sampleevent" class="page">
     <div class="page-content">
       <div class="content-block-inner">
-        <h1>Running</h1>
-        <h2>3 min</h2>
-        Almaden Lake Park
-        <p id = "status">
-        </p>
+        <div>
+          <h1 class="activity-name">{{name}}</h1>
+        </div>
+        <img src="img/{{activity_type}}.png" class="event-page-activity-img">
+        <h2 class="activity-time-until">{{timeuntil}}</h2>
+        <div class="activity-address">{{address}}</div>
         <p>
           <button id = "start">Start!</button>
         </p>
         <img id="static-map">
       </div>
+      <div class="activity-id" data-id="{{id}}"></div>
     </div>
   </div>
-</div>          
+</div>

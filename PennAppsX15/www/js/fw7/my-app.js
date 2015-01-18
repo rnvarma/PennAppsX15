@@ -1,5 +1,7 @@
 // Initialize your app
-var myApp = new Framework7();
+var myApp = new Framework7({
+    template7Pages: true
+});
 
 // Export selectors engine
 var $$ = Dom7;
@@ -102,36 +104,16 @@ myApp.onPageInit('create', function (page) {
         );
 });
 
-myApp.onPageInit('home', function (page) {
-    // run createContentPage func after link was clicked
-    $$('.create-page').on('click', function () {
-        createContentPage();
-    });
-
-    activitiesURL = "http://pennappsx15.herokuapp.com/1/getactivities/" + USER_DATA.fb_toke;
+function getAddresses(activity) {
+// get the address from the long/lat coordinates
+    var addressURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+activity["meet_location_lat"]+","+activity["meet_location_long"]+"&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
+    var address = addressURL;
 
     $.ajax({
-       url: activitiesURL,
-       crossDomain: true,
-       success: function(data) {
-        for (var i = 0; i < data.length; i++) {
-            console.log(data[i]);
-            var activity = data[i];
-
-            // get the address from the long/lat coordinates
-            var addressURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+activity["meet_location_lat"]+","+activity["meet_location_long"]+"&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
-            var address = addressURL;
-
-            $.ajax({
-                url: addressURL,
-                crossDomain: true,
-                success: function(input) {
-                    address = input.results[0].formatted_address;
-                    $(".item-subtitle").text(address);
-                },
-                dataType:"json"
-            });
-
+        url: addressURL,
+        crossDomain: true,
+        success: function(input) {
+            address = input.results[0].formatted_address;
             // the date is formatted differently in the database
             var splitEventDate = activity["start_date_time"].split("T");
             var splitDate = splitEventDate[0].split("-");
@@ -154,15 +136,22 @@ myApp.onPageInit('home', function (page) {
                 displayDate = hourDiff.toString() + " hrs";
             }
 
+            var user_img = "http://graph.facebook.com/" + activity["creator"]["fb_toke"] + "/picture";
+
+            activity['timeuntil'] = displayDate;
+            activity['address'] = address
+
+            console.log(activity);
+
             var static_img_url = "https://maps.googleapis.com/maps/api/streetview?size=200x200&location=" + activity.meet_location_lat + "," + activity.meet_location_long
 
             $("#activities-list").append(
                 '<li id="activities" class="swipeout">' +
-                '<a href="sampleevent.html" class="item-link item-content">' +
+                "<a href='sampleevent.html' class='item-link item-content' data-context='" + JSON.stringify(activity) + "'>" +
                 '<div class="swipeout-content">' +
                 '<!-- List element goes here -->' +
                 '<div class="item-content">' +
-                '   <div class="item-media"><img src="' + static_img_url + '" width="30px"></div>' +
+                '   <div class="item-media" id="user-post" style="background-image: url('+ user_img + ');"></div>' +
                 '       <div class="item-inner">' +
                 '           <div class="item-title-row">' +
                 '               <div class="item-title">'+ activity.name + '</div>' +
@@ -181,6 +170,26 @@ myApp.onPageInit('home', function (page) {
                 '   </div>' +
                 '   </a>' +
                 '</li>')
+        },
+        dataType:"json"
+    });
+}
+
+myApp.onPageInit('home', function (page) {
+    // run createContentPage func after link was clicked
+    $$('.create-page').on('click', function () {
+        createContentPage();
+    });
+
+    activitiesURL = "http://pennappsx15.herokuapp.com/1/getactivities/" + USER_DATA.fb_toke;
+
+    $.ajax({
+       url: activitiesURL,
+       crossDomain: true,
+       success: function(data) {
+        for (var i = 0; i < data.length; i++) {
+            var activity = data[i];
+            getAddresses(activity);
         }
        },
        dataType: "json"
@@ -265,6 +274,13 @@ myApp.onPageInit('profile', function (page) {
     var id = USER_DATA.fb_toke;
     var img_url = "http://graph.facebook.com/" + id + "/picture?width=200&height=200";
     $(".fb-img").attr("src", img_url);
+});
+
+myApp.onPageInit('sampleevent', function (page) {
+    // run createContentPage func after link was clicked
+    $$('.create-page').on('click', function () {
+        createContentPage();
+    });
 });
 
 
