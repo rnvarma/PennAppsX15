@@ -149,8 +149,7 @@ function getAddresses(activity) {
             activity['address'] = address
 
             var static_img_url = "https://maps.googleapis.com/maps/api/streetview?size=200x200&location=" + activity.meet_location_lat + "," + activity.meet_location_long
-
-            if (dayDiff > 0 || hourDiff > 0 || minuteDiff > 0) {
+            if (dayDiff > 0 || (dayDiff == 0 && hourDiff > 0)) {
                 $("#activities-list").append(
                 '<li id="activities" class="swipeout">' +
                 "<a href='sampleevent.html' class='item-link item-content' data-context='" + JSON.stringify(activity) + "'>" +
@@ -231,7 +230,7 @@ function getNewsfeed(activity) {
             activity['timeuntil'] = displayDate;
             activity['address'] = address;
 
-            if (dayDiff <= 0 && hourDiff <= 0 && minuteDiff <= 0) {
+            if (dayDiff < 0 || (dayDiff == 0 && hourDiff <= 0 && minuteDiff <= 0)) {
                 $("#newsfeed-list").append(
                 '<li id="activities" class="swipeout">' +
                 "<a href='sampleevent.html' class='item-link item-content' data-context='" + JSON.stringify(activity) + "'>" +
