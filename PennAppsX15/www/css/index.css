@@ -264,6 +264,10 @@ a .join {
     outline: 0;
 }
 
+.create-submit-button:focus {
+    outline: 0;
+}
+
 .activity-start-time {
     margin-bottom: 0px;
 }
@@ -287,4 +291,8 @@ a .join {
 .profile-tab.active {
     color: #2ec2c7;
     background: inherit;
+}
+
+.item-inner {
+    border-bottom: none;
 }

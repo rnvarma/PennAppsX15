@@ -354,7 +354,7 @@ myApp.onPageInit('sampleevent', function (page) {
         $("#start").hide();
         $("#join").show();
         $("#join").click(function() {
-            $.post("http://127.0.0.1:8080/1/activityjoin",{
+            $.post("http://pennappsx15.herokuapp.com/1/activityjoin",{
                 activity_id: $$(".activity-id").attr("data-id"),
                 user_id: USER_DATA.fb_toke
             }, function(d) {
