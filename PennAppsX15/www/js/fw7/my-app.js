@@ -203,11 +203,85 @@ myApp.onPageInit('home', function (page) {
      });
 });
 
+function getNewsfeed(activity) {
+// get the address from the long/lat coordinates
+    var addressURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+activity["meet_location_lat"]+","+activity["meet_location_long"]+"&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
+    var address = addressURL;
+
+    $.ajax({
+        url: addressURL,
+        crossDomain: true,
+        success: function(input) {
+            address = input.results[0].formatted_address;
+            // the date is formatted differently in the database
+            var splitEventDate = activity["start_date_time"].split("T");
+            var splitDate = splitEventDate[0].split("-");
+            var splitTime = splitEventDate[1].split(":");
+            var getCurrDate = new Date();
+
+            // calculate minute, hour, and day difference
+            var minuteDiff = parseInt(splitTime[1]) - getCurrDate.getMinutes();
+            var hourDiff = parseInt(splitTime[0]) - getCurrDate.getHours();
+            var dayDiff = parseInt(splitDate[2]) - getCurrDate.getDate();
+
+            var displayDate = splitEventDate[0];
+
+            var user_img = "http://graph.facebook.com/" + activity["creator"]["fb_toke"] + "/picture";
+
+            activity['timeuntil'] = displayDate;
+            activity['address'] = address;
+
+            if (dayDiff <= 0 && hourDiff <= 0 && minuteDiff <= 0) {
+                $("#newsfeed-list").append(
+                '<li id="activities" class="swipeout">' +
+                "<a href='sampleevent.html' class='item-link item-content' data-context='" + JSON.stringify(activity) + "'>" +
+                '<div class="swipeout-content">' +
+                '<!-- List element goes here -->' +
+                '<div class="item-content">' +
+                '   <div class="item-media" id="user-post" style="background-image: url('+ user_img + ');"></div>' +
+                '       <div class="item-inner">' +
+                '           <div class="item-title-row">' +
+                '               <div class="item-title">'+ activity.name + '</div>' +
+                '               <div class="item-after"><b>' + displayDate + '</b></div>' +
+                '           </div>' +
+                '<div class="item-subtitle"><i class="fa fa-map-marker"></i> '+ address + '</div>' +
+                '    <div class="item-text">' +
+                '      +3 attended!' +
+                '    </div>' +
+                '  </div>' +
+                '</div>' + 
+                '</div>' +
+                ' <!-- Swipeout actions left -->' +
+                '   <div class="swipeout-actions-right">' +
+                '        <a href="#" class="join">Join</a>' +
+                '   </div>' +
+                '   </a>' +
+                '</li>')
+            }
+        },
+        dataType:"json"
+    });
+}
+
 myApp.onPageInit('newsfeed', function (page) {
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+
+    activitiesURL = "http://pennappsx15.herokuapp.com/1/getactivities/" + USER_DATA.fb_toke;
+
+    $.ajax({
+       url: activitiesURL,
+       crossDomain: true,
+       success: function(data) {
+        for (var i = 0; i < data.length; i++) {
+            var activity = data[i];
+            getNewsfeed(activity);
+        }
+       },
+       dataType: "json"
+     });
 });
 
 function getCompetitors(activity,number) {

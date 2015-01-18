@@ -236,6 +236,10 @@ a .join {
     padding-left: 0px;
 }
 
+#newsfeed-list {
+    padding-left: 0px;
+}
+
 .page-content{
     padding-top:20px !important;
 }
