@@ -255,13 +255,36 @@ myApp.onPageInit('profile', function (page) {
     var id = USER_DATA.fb_toke;
     var img_url = "http://graph.facebook.com/" + id + "/picture?width=200&height=200";
     $(".fb-img").attr("src", img_url);
+
+    $(".profile-tab").click(function() {
+        $(".profile-tab.active").removeClass("active");
+        $(this).addClass("active");
+    })
 });
+
+function getStartTimeFromFormattedThing(thing) {
+    var time, hours, minutes, after;
+    time = thing.split("T")[1];
+    time = time.split(":");
+    hours = time[0];
+    minutes = time[1];
+    after = "AM";
+    if (hours >= 12) {
+        after = "PM";
+        hours = (hours == 12) ? hours : hours % 12;
+    }
+    time = hours + ":" + minutes + " " + after
+    return time;
+}
 
 myApp.onPageInit('sampleevent', function (page) {
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+
+    var time = getStartTimeFromFormattedThing($(".data-activity-time").attr("data-time"));
+    $(".activity-start-time").text("Start time: " + time);
 
     // Helper functions to turn timer on/off
     var routeString = "";
@@ -311,10 +334,37 @@ myApp.onPageInit('sampleevent', function (page) {
         $$('#start').off('click', endTimer);
         $$('#start').on('click', startTimer);
     }
-    
+
     // Initialize timer
     $$('#start').on('click', startTimer);
 
+    var isParticipant = false
+
+    $(".participant-fb-tokes").each(function() {
+        if ($(this).attr("data-toke") == USER_DATA.fb_toke) {
+            $("#start").hide();
+            $("#join").show();
+            $("#join").text("You have joined");
+            $("#join").attr("disabled", "disabled");
+            isParticipant = true;
+        }
+    })
+
+    if (!isParticipant && $(".creator-fb-toke").attr("data-toke") != USER_DATA.fb_toke) {
+        $("#start").hide();
+        $("#join").show();
+        $("#join").click(function() {
+            $.post("http://127.0.0.1:8080/1/activityjoin",{
+                activity_id: $$(".activity-id").attr("data-id"),
+                user_id: USER_DATA.fb_toke
+            }, function(d) {
+                $("#join").text("You have joined");
+                $("#join").attr("disabled", "disabled");
+            });
+        });
+    }
+
+    // stuff to get the event page map
     var lat = parseFloat($(".lattitude").attr("data-lat"));
     var lng = parseFloat($(".longitude").attr("data-long"));
 

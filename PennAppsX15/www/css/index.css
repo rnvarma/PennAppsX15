@@ -257,4 +257,27 @@ a .join {
     outline: 0;
 }
 
+.activity-start-time {
+    margin-bottom: 0px;
+}
 
+.host-row {
+    margin: 5px 0;
+}
+
+.host-title {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 200%;
+}
+
+.profile-tab {
+    background: inherit;
+    color: #d0d0d0;
+    border-color: #d0d0d0;
+}
+
+.profile-tab.active {
+    color: #2ec2c7;
+    background: inherit;
+}
