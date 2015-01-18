@@ -263,6 +263,28 @@ myApp.onPageInit('sampleevent', function (page) {
         createContentPage();
     });
 
+    // Initialize map
+    var lat = parseFloat($(".lattitude").attr("data-lat"));
+    var lng = parseFloat($(".longitude").attr("data-long"));
+
+    var latlong = new google.maps.LatLng(lat, lng);
+    var mapOptions = {
+      center: latlong,
+      zoom: 18,
+      draggable:false,
+      scrollwheel:false,
+      disableDoubleClickZoom: true,
+      disableDefaultUI: true
+    };
+    var map = new google.maps.Map(document.getElementById('event-map-div'), mapOptions);
+    var marker = new google.maps.Marker({
+        position: latlong,
+        title:"Starting Point",
+    });
+    marker.setMap(map);
+
+    var coords = [new google.maps.LatLng(lat, lng)];
+
     // Helper functions to turn timer on/off
     var routeString = "";
     var refreshIntervalId; // id for time interval
@@ -279,6 +301,18 @@ myApp.onPageInit('sampleevent', function (page) {
         refreshIntervalId = setInterval(function() {
             var newLocation = updateUserLocation(function (data) {
                 locations.push(data);
+                
+                // Update map
+                coords.push(new google.maps.LatLng(data.lat, data.lng));
+                var path = new google.maps.Polyline({
+                    path: coords,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.7,
+                    strokeWeight: 2
+                });
+                path.setMap(map);
+
                 console.log(data);
                 routeString += "|" + data.lat + "," + data.lng;
 
@@ -287,7 +321,7 @@ myApp.onPageInit('sampleevent', function (page) {
                     // data contains the distance traveled in the activity so far
                 });
             }, $$(".activity-id").attr("data-id"));
-        }, 30000);
+        }, 10000);
 
         // Set button action to be able to End timer
         $$("#status").append('Activity in progress! Click to end.');
@@ -314,25 +348,6 @@ myApp.onPageInit('sampleevent', function (page) {
     
     // Initialize timer
     $$('#start').on('click', startTimer);
-
-    var lat = parseFloat($(".lattitude").attr("data-lat"));
-    var lng = parseFloat($(".longitude").attr("data-long"));
-
-    var latlong = new google.maps.LatLng(lat, lng);
-    var mapOptions = {
-      center: latlong,
-      zoom: 12,
-      draggable:false,
-      scrollwheel:false,
-      disableDoubleClickZoom: true,
-      disableDefaultUI: true
-    };
-    var map = new google.maps.Map(document.getElementById('event-map-div'), mapOptions);
-    var marker = new google.maps.Marker({
-        position: latlong,
-        title:"Starting Point",
-    });
-    marker.setMap(map);
 });
 
 
