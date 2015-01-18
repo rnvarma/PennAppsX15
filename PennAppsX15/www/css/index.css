@@ -119,7 +119,7 @@ h1 {
 }
 
 .tab-link {
-    width: 50px
+    width: 50px;
 }
 
 .plus-button-tab {
@@ -146,7 +146,6 @@ li #activities {
     padding-top:20px;
     margin-top:0px;
     width:100%;
-    border-bottom:1px solid gray;
 }
 
 .item-title {
@@ -237,6 +236,14 @@ a .join {
     padding-left: 0px;
 }
 
+.page-content{
+    padding-top:20px !important;
+}
+
+.item-content{
+    border-bottom:1px solid #e5e5e5 !important;
+}
+
 .event-page-main {
     height: initial;
     padding-top: 20px;
@@ -257,4 +264,35 @@ a .join {
     outline: 0;
 }
 
+.create-submit-button:focus {
+    outline: 0;
+}
 
+.activity-start-time {
+    margin-bottom: 0px;
+}
+
+.host-row {
+    margin: 5px 0;
+}
+
+.host-title {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 200%;
+}
+
+.profile-tab {
+    background: inherit;
+    color: #d0d0d0;
+    border-color: #d0d0d0;
+}
+
+.profile-tab.active {
+    color: #2ec2c7;
+    background: inherit;
+}
+
+.list-block .item-inner {
+    border-bottom: none !important;
+}
