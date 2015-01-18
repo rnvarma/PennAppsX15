@@ -158,7 +158,8 @@ function getAddresses(activity) {
 
             var static_img_url = "https://maps.googleapis.com/maps/api/streetview?size=200x200&location=" + activity.meet_location_lat + "," + activity.meet_location_long
 
-            $("#activities-list").append(
+            if (dayDiff > 0 || hourDiff > 0 || minuteDiff > 0) {
+                $("#activities-list").append(
                 '<li id="activities" class="swipeout">' +
                 "<a href='sampleevent.html' class='item-link item-content' data-context='" + JSON.stringify(activity) + "'>" +
                 '<div class="swipeout-content">' +
@@ -183,6 +184,7 @@ function getAddresses(activity) {
                 '   </div>' +
                 '   </a>' +
                 '</li>')
+            }
         },
         dataType:"json"
     });
@@ -259,6 +261,21 @@ myApp.onPageInit('leaderboard', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+
+
+
+    $.ajax({
+    url: activitiesURL,
+    crossDomain: true,
+    success: function(data) {
+        for (var i = 0; i < data.length; i++) {
+            var activity = data[i];
+            getAddresses(activity);
+        }
+    },
+    dataType: "json"
+    });
+
 });
 
 myApp.onPageInit('profile', function (page) {
