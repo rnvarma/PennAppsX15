@@ -39,9 +39,6 @@ function updateUserLocation(callback, activity_id) {
                 if (activity_id !== undefined) {
                     // Update activity location
                 }
-                // Post user's curr location to server
-                $$.post("http://pennappsx15.herokuapp.com/1/currloc", data, function(d) {
-                });
                 if (callback){
                     callback(data);
                 }
@@ -245,13 +242,16 @@ myApp.onPageInit('sampleevent', function (page) {
         var routeString = "";
         var refreshIntervalId; // id for time interval
         function startTimer() {
-
-            /*
-            $$.post("http://pennappsx15.herokuapp.com/1/activitypoints", data, function(d) {
+            
+            $$.post("http://pennappsx15.herokuapp.com/1/activitystatus",
+                {
+                    activity_id: $$(".activity-id").attr("data-id"),
+                    type: 'start'
+                }, function(d) {
                                 console.log("reply: "+d);
-                                alert("Your activity was successfully created!");
-                            });
-            */
+                                alert("Your activity is !");
+                });
+            
             console.log("Starting timer!");
             // create array to store locations
             var locations = [];
@@ -266,6 +266,11 @@ myApp.onPageInit('sampleevent', function (page) {
                     locations.push(data);
                     console.log(data);
                     routeString += "|" + data.lat + "," + data.lng;
+
+                    // Post user's curr location to server
+                    $$.post("http://pennappsx15.herokuapp.com/1/currloc", data, function(d) {
+                    });
+
                     //$$('#static-map').attr("src", routeMap(routeString));
                     /*
                     $$.post("http://pennappsx15.herokuapp.com/1/activitypoints", data, function(d) {
@@ -283,6 +288,16 @@ myApp.onPageInit('sampleevent', function (page) {
             $$('#start').on('click', endTimer);
         }
         function endTimer() {
+
+            $.post("http://pennappsx15.herokuapp.com/1/activitystatus",
+                {
+                    activity_id: $$(".activity-id").attr("data-id"),
+                    type: 'complete'
+                }, function(d) {
+                                console.log("reply: "+d);
+                                alert("Your activity is !");
+                });
+
             console.log("Stopping timer!");
             clearInterval(refreshIntervalId); // Clear interval
             // Set button action to be able to End timer
