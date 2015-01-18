@@ -23,13 +23,9 @@ function staticMap(lat, lon) {
 //e.g. path=color:0x0000ff|weight:5|40.737102,-73.990318|40.749825,-73.987963|40.752946,-73.987384|40.755823,-73.986397
 // Takes list of coord tuples [lat, long] in route 
 // Returns Google static map
-function routeMap(arr) {
-    var coords = "";
-    for (var i in arr) {
-        coords += "|" + arr[i].lat + "," + arr[i].lon;
-    }
+function routeMap(routePath) {
     return "https://maps.googleapis.com/maps/api/staticmap?path=color:0x0000ff|weight:5"+
-        coords + "&size=400x400&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
+        routePath + "&size=400x400&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
 }
 
 function updateUserLocation(callback, activity_id) {
@@ -43,9 +39,6 @@ function updateUserLocation(callback, activity_id) {
                 if (activity_id !== undefined) {
                     // Update activity location
                 }
-                // Post user's curr location to server
-                $$.post("http://pennappsx15.herokuapp.com/1/currloc", data, function(d) {
-                });
                 if (callback){
                     callback(data);
                 }
@@ -66,18 +59,6 @@ myApp.onPageInit('create', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
-
-    data = [
-            {lat: 39.943913494072, lon: -75.14748898749997},
-            {lat: 40.4892106296273, lon: -76.3669714093749},
-            {lat: 41.19565802096997, lon: -77.02615109687}
-        ];
-    /*
-    // Add map of route
-    $$('.content-block').append(
-        "<img src='" + routeMap(data) + "'>"
-    );
-    */
 
     // Allow input of starting point
     navigator.geolocation.getCurrentPosition(
@@ -212,44 +193,6 @@ myApp.onPageInit('home', function (page) {
        },
        dataType: "json"
      });
-
-    // Helper functions to turn timer on/off
-    var refreshIntervalId; // id for time interval
-    function startTimer() {
-        console.log("Starting timer!");
-        // create array to store locations
-        var locations = [];
-        updateUserLocation(function (data) {
-            locations.push(data);
-            console.log(data);
-        });
-        // Start interval
-        refreshIntervalId = setInterval(function() {
-            var newLocation = updateUserLocation(function (data) {
-                locations.push(data);
-                console.log(data);
-            });
-        }, 30000);
-
-        // Set button action to be able to End timer
-        $$("#status").append('Activity in progress! Click to end.');
-        $$("#start").html('End');
-        $$('#start').off('click', startTimer);
-        $$('#start').on('click', endTimer);
-    }
-    function endTimer() {
-        console.log("Stopping timer!");
-        clearInterval(refreshIntervalId); // Clear interval
-        // Set button action to be able to End timer
-        
-        $$("#status").html('Congratulations! You just completed ___ miles.');
-        $$("#start").remove('End');
-        $$('#start').off('click', endTimer);
-        $$('#start').on('click', startTimer);
-    }
-    
-    // Initialize timer
-    $$('#start').on('click', startTimer);
 });
 
 myApp.onPageInit('newsfeed', function (page) {
@@ -259,21 +202,35 @@ myApp.onPageInit('newsfeed', function (page) {
     });
 });
 
+function getCompetitors(activity,number) {
+    var user_img = "http://graph.facebook.com/" + activity["fb_toke"] + "/picture";
+    var name = activity['name'];
+    var totalDistance = activity['distance_traveled'];
+    $("#leaderList").append(
+    '<li class="item-content" style="height: 70px;">' + number +
+    '. <div class="item-media" id="user-post" style="background-image: url('+ user_img + '); margin-left: 15px;"></div>' +
+    '<div class="item-inner"> ' +
+    '<div class="item-title">' + name + '</div>' +
+    '<div class="item-after">' + totalDistance + ' mi</div>' +
+    '</div></li>');
+}
+
 myApp.onPageInit('leaderboard', function (page) {
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
     });
 
-
+    var localURL = "http://pennappsx15.herokuapp.com/1/getleaderboard/" + USER_DATA.fb_toke;
 
     $.ajax({
-    url: activitiesURL,
+    url: localURL,
     crossDomain: true,
     success: function(data) {
-        for (var i = 0; i < data.length; i++) {
-            var activity = data[i];
-            getAddresses(activity);
+        neighbors = data.sort(function(a,b) { return a["distance_traveled"] - b["distance_traveled"] } );
+        for (var i = 0; i < neighbors.length; i++) {
+            var neighbor = neighbors[i];
+            getCompetitors(neighbor,i+1);
         }
     },
     dataType: "json"
@@ -297,6 +254,80 @@ myApp.onPageInit('sampleevent', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+
+    // Helper functions to turn timer on/off
+        var routeString = "";
+        var refreshIntervalId; // id for time interval
+        function startTimer() {
+            
+            $$.post("http://pennappsx15.herokuapp.com/1/activitystatus",
+                {
+                    activity_id: $$(".activity-id").attr("data-id"),
+                    type: 'start'
+                }, function(d) {
+                                console.log("reply: "+d);
+                                alert("Your activity is !");
+                });
+            
+            console.log("Starting timer!");
+            // create array to store locations
+            var locations = [];
+            updateUserLocation(function (data) {
+                locations.push(data);
+                routeString = "|" + data.lat + "," + data.lng;
+                console.log(data);
+            });
+            // Start interval
+            refreshIntervalId = setInterval(function() {
+                var newLocation = updateUserLocation(function (data) {
+                    locations.push(data);
+                    console.log(data);
+                    routeString += "|" + data.lat + "," + data.lng;
+
+                    // Post user's curr location to server
+                    $$.post("http://pennappsx15.herokuapp.com/1/currloc", data, function(d) {
+                    });
+
+                    //$$('#static-map').attr("src", routeMap(routeString));
+                    /*
+                    $$.post("http://pennappsx15.herokuapp.com/1/activitypoints", data, function(d) {
+                                console.log("reply: "+d);
+                                alert("Your activity was successfully created!");
+                    });
+                    */
+                });
+            }, 30000);
+
+            // Set button action to be able to End timer
+            $$("#status").append('Activity in progress! Click to end.');
+            $$("#start").html('End');
+            $$('#start').off('click', startTimer);
+            $$('#start').on('click', endTimer);
+        }
+        function endTimer() {
+
+            $.post("http://pennappsx15.herokuapp.com/1/activitystatus",
+                {
+                    activity_id: $$(".activity-id").attr("data-id"),
+                    type: 'complete'
+                }, function(d) {
+                                console.log("reply: "+d);
+                                alert("Your activity is !");
+                });
+
+            console.log("Stopping timer!");
+            clearInterval(refreshIntervalId); // Clear interval
+            // Set button action to be able to End timer
+            
+            $$("#status").html('Congratulations! You just completed ___ miles.');
+            $$("#start").remove('End');
+            $$('#start').off('click', endTimer);
+            $$('#start').on('click', startTimer);
+        }
+        
+        // Initialize timer
+        $$('#start').on('click', startTimer);
+
     var lat = parseFloat($(".lattitude").attr("data-lat"));
     var lng = parseFloat($(".longitude").attr("data-long"));
 
