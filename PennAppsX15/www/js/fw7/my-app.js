@@ -3,6 +3,15 @@ var myApp = new Framework7({
     template7Pages: true
 });
 
+var last_page;
+
+var activity_colors = {
+    'Walking': '#EE4000',
+    'Biking': '#0057e7',
+    'Hiking': '#ffa700',
+    'Running': '#008744'
+}
+
 // Export selectors engine
 var $$ = Dom7;
 
@@ -75,6 +84,10 @@ function updateUserLocation(callback, activity_id) {
 
 // Callbacks to run specific code for specific pages, for example for About page:
 myApp.onPageInit('create', function (page) {
+
+    $(".center-heading").empty().text("New Activity");
+    $(".navbar").removeClass("create-mode");
+
     addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
@@ -112,8 +125,11 @@ myApp.onPageInit('create', function (page) {
                                 id: USER_DATA.fb_toke
                             };
                         $$.post("http://pennappsx15.herokuapp.com/1/activity", data, function(d) {
-                            console.log("reply: "+d);
-                            alert("Your activity was successfully created!");
+                            // Initialize View          
+                            var mainView = myApp.addView('.view-main')          
+                                    
+                            // Go back on main View
+                            mainView.mainView.loadPage("home.html");
                         });
                 });
             },
@@ -196,6 +212,7 @@ function getAddresses(activity) {
 
             activity['timeuntil'] = displayDate;
             activity['address'] = address
+            activity['a_color'] = activity_colors[activity.activity_type];
 
             var static_img_url = "https://maps.googleapis.com/maps/api/streetview?size=200x200&location=" + activity.meet_location_lat + "," + activity.meet_location_long
             if (date_data.day > 0 || (date_data.day == 0 && date_data.hour > 0)) {
@@ -205,11 +222,11 @@ function getAddresses(activity) {
                 '<div class="swipeout-content">' +
                 '<!-- List element goes here -->' +
                 '<div class="item-content">' +
-                '   <div class="item-media" id="user-post" style="background-image: url('+ user_img + ');"></div>' +
-                '       <div class="item-inner">' +
+                '   <div class="item-media activities-post" id="user-post" style="background-image: url('+ user_img + ');"></div>' +
+                '       <div class="item-inner activity-post-title">' +
                 '           <div class="item-title-row">' +
-                '               <div class="item-title">'+ activity.name + '</div>' +
-                '               <div class="item-after"><b>in ' + displayDate + '</b></div>' +
+                '               <div class="item-title"><b>'+ activity.activity_type + '</b> w/ ' + activity.creator.name + ' in <b>' + activity.timeuntil +'</b></div>' +
+                // '               <div class="item-after"><b>in ' + displayDate + '</b></div>' +
                 '           </div>' +
                 '<div class="item-subtitle"><i class="fa fa-map-marker"></i> '+ address + '</div>' +
                 '    <div class="item-text" id="att">' + pstring +
@@ -230,6 +247,13 @@ function getAddresses(activity) {
 }
 
 myApp.onPageInit('home', function (page) {
+
+    last_page = "Activities"
+
+    $(".center-heading").empty().text("Activities");
+
+    $(".toolbar.tabbar.tabbar-labels").show();
+    $(".navbar").show();
 
     addRefreshListener();
     // run createContentPage func after link was clicked
@@ -266,7 +290,7 @@ function getDisplayDate(activity) {
     return splitDate[1] + "/" + splitDate[2] + "/" + splitDate[0].slice(2,4);
 }
 
-function getNewsfeed(activity, selector) {
+function getNewsfeed(activity, selector, showAll) {
 // get the address from the long/lat coordinates
     var addressURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+activity["meet_location_lat"]+","+activity["meet_location_long"]+"&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
     var address = addressURL;
@@ -280,6 +304,7 @@ function getNewsfeed(activity, selector) {
             } else {
                 address = input.results[0].formatted_address;
             }
+            console.log(activity);
             // the date is formatted differently in the database
             var displayDate = getDisplayDate(activity);
 
@@ -288,6 +313,7 @@ function getNewsfeed(activity, selector) {
             var date_data = getTimeUntil(activity);
             activity['timeuntil'] = date_data.display;
             activity['address'] = address;
+            activity['a_color'] = activity_colors[activity.activity_type];
 
             // get other users
             var numOfParticipants = activity.participants.length;
@@ -309,7 +335,7 @@ function getNewsfeed(activity, selector) {
                 pstring = pstring + "attended! </div>";
             }
 
-            if (date_data.day < 0 || (date_data.day == 0 && date_data.hour <= 0 && date_data.minute <= 0)) {
+            if (showAll || date_data.day < 0 || (date_data.day == 0 && date_data.hour <= 0 && date_data.minute <= 0)) {
                 $(selector).append(
                 '<li id="activities" class="swipeout">' +
                 "<a href='sampleevent.html' class='item-link item-content' data-context='" + JSON.stringify(activity) + "'>" +
@@ -339,6 +365,13 @@ function getNewsfeed(activity, selector) {
 }
 
 myApp.onPageInit('newsfeed', function (page) {
+
+    last_page = "Newsfeed";
+
+    $(".navbar").removeClass("create-mode");
+
+    $(".center-heading").empty().text("Newsfeed");
+
     addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
@@ -374,6 +407,10 @@ function getCompetitors(activity,number) {
 }
 
 myApp.onPageInit('leaderboard', function (page) {
+
+    $(".center-heading").empty().text("Leaderboard");
+    $(".navbar").removeClass("create-mode");
+
     addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
@@ -386,7 +423,7 @@ myApp.onPageInit('leaderboard', function (page) {
         url: localURL,
         crossDomain: true,
         success: function(data) {
-            neighbors = data.sort(function(a,b) { return a["distance_traveled"] - b["distance_traveled"] } );
+            neighbors = data.sort(function(a,b) { return - a["distance_traveled"] + b["distance_traveled"] } );
             for (var i = 0; i < neighbors.length; i++) {
                 var neighbor = neighbors[i];
                 getCompetitors(neighbor,i+1);
@@ -399,11 +436,23 @@ myApp.onPageInit('leaderboard', function (page) {
 
 function load_profile_tabs(selector, posts) {
     for (var i = 0; i < posts.length; i++) {
-        getNewsfeed(posts[i], selector);
+        getNewsfeed(posts[i], selector, true);
+    }
+}
+
+function load_i_profile_tabs(selector, posts) {
+    for (var i = 0; i< posts.length; i++) {
+        var activity = posts[i]
+        if (!activity.is_complete) {
+            getNewsfeed(activity, selector, true);
+        }
     }
 }
 
 myApp.onPageInit('profile', function (page) {
+    $(".center-heading").empty().text(USER_DATA.name);
+    $(".navbar").addClass("create-mode");
+
     addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
@@ -422,6 +471,7 @@ myApp.onPageInit('profile', function (page) {
         success: function(data) {
             load_profile_tabs("#profile-personal", data.personal_activities);
             load_profile_tabs("#joined-profile", data.joined_activities);
+            load_i_profile_tabs("#incomplete-profile", data.personal_activities.concat(data.joined_activities));
         },
         dataType: "json"
      });
@@ -451,6 +501,14 @@ function getStartTimeFromFormattedThing(thing) {
 }
 
 myApp.onPageInit('sampleevent', function (page) {
+
+    $(".center-heading").empty()
+    $(".left-header").show();
+    $(".toolbar.tabbar.tabbar-labels").hide();
+    $(".navbar").addClass("create-mode");
+    console.log($(".a-color").attr("data-col"))
+    $(".navbar").css("background-color", $(".a-color").attr("data-col"));
+
     addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
@@ -613,5 +671,18 @@ $(".tab-link").click(function() {
     myApp.mainView.router.loadPage({url: $(this).attr("href"), animatePages:false});
     $(".tab-link.active").removeClass("active");
     $(this).addClass("active");
+})
+
+$(".left-header").click(function() {
+    // Initialize View          
+    var mainView = myApp.addView('.view-main')          
+            
+    // Go back on main View
+    mainView.router.back();
+
+    $(this).hide();
+    $(".toolbar.tabbar.tabbar-labels").show();
+    $(".navbar").css("background-color", "#ffa700");
+    $(".center-heading").text(last_page);
 })
 

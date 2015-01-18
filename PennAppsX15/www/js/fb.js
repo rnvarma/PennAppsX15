@@ -84,7 +84,7 @@ var USER_DATA;
           // Initialize View
           var mainView = myApp.addView('.view-main')
           // Load page from about.html file to main View:
-          myApp.mainView.loadPage('home.html');
+          // myApp.mainView.loadPage('home.html');
         },
         dataType: "json"
       });

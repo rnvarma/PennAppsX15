@@ -31,25 +31,25 @@
       <!-- Your main view, should have "view-main" class -->
       <div class="view view-main">
         <!-- Top Navbar-->
-        <div class="navbar">
+        <div class="navbar" style="display:none;">
           <div class="navbar-inner">
             <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-            <div class="center"><img src="img/wego.png" alt=""></div>
-            <div class="right">
-              <!-- 
-                Right link contains only icon - additional "icon-only" class
-                Additional "open-panel" class tells app to open panel when we click on this link
-              -->
-              <a href="#" class="link icon-only open-panel"><i class="icon icon-bars-blue"></i></a>
-            </div>
+            <div class="center-heading"></div>
+          </div>
+          <div class="right-header button">
+            logout
+          </div>
+          <div class="left-header" style="display:none;">
+            <i class="fa fa-times fa-lg"></i>
           </div>
         </div>
         <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
         <div class="pages navbar-through toolbar-through">
           <!-- Page, "data-page" contains page name -->
           <div data-page="index" class="page">
+            <i class="fa fa-bicycle front-page-logo"></i>
             <!-- Scrollable page content -->
-            <div class="page-content" style="background:url(../img/stockphoto.png) no-repeat; background-position:30% 0%;height:100%;background-size:auto 100%;">
+            <div class="page-content" style="background-color:white;">
               <div style="margin-top:525px;text-align:center;">
               <div id="fb-root"></div>
               <fb:login-button data-size="xlarge" scope="public_profile,email"onlogin="checkLoginState();">
@@ -66,7 +66,7 @@
           </div>
         </div>
         <!-- Bottom Toolbar-->
-        <div class="toolbar tabbar tabbar-labels">
+        <div class="toolbar tabbar tabbar-labels" style="display:none;">
             <div class="toolbar-inner">
                 <a href="home.html" class="tab-link active" data-name="Activities">
                     <i class="fa fa-bicycle fa-2x"></i>
