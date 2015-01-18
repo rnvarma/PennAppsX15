@@ -325,3 +325,11 @@ a .join {
 #att {
     margin-top:5px;
 }
+
+.profile-feed {
+    display: none;
+}
+
+.profile-feed.active {
+    display: inherit;
+}

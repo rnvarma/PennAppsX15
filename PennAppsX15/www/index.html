@@ -51,13 +51,12 @@
             <!-- Scrollable page content -->
             <div class="page-content" style="background:url(../img/stockphoto.png) no-repeat; background-position:30% 0%;height:100%;background-size:auto 100%;">
               <div style="margin-top:525px;text-align:center;">
-              <!--<div id="fb-root"></div>-->
-              <fb:login-button size="xlarge"
-                               onlogin="require('./log').info('onlogin callback')">
+              <div id="fb-root"></div>
+              <fb:login-button data-size="xlarge" scope="public_profile,email"onlogin="checkLoginState();">
                 Login with Facebook
               </fb:login-button>
-              <!--<fb:login-button data-size="xlarge" scope="public_profile,email" onlogin="checkLoginState();"></div>
-              </fb:login-button>-->
+              <!-- <fb:login-button data-size="xlarge" scope="public_profile,email" onlogin="checkLoginState();"></div> -->
+              <!-- </fb:login-button> -->
 
               <div id="status">
               </div>

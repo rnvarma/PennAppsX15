@@ -124,6 +124,36 @@ myApp.onPageInit('create', function (page) {
         );
 });
 
+function getTimeUntil(activity) {
+    var splitEventDate = activity["start_date_time"].split("T");
+    var splitDate = splitEventDate[0].split("-");
+    var splitTime = splitEventDate[1].split(":");
+    var getCurrDate = new Date();
+
+    // calculate minute, hour, and day difference
+    var minuteDiff = parseInt(splitTime[1]) - getCurrDate.getMinutes();
+    var hourDiff = parseInt(splitTime[0]) - getCurrDate.getHours();
+    var dayDiff = parseInt(splitDate[2]) - getCurrDate.getDate();
+
+    // by default, the time is in minutes
+
+    var displayDate = minuteDiff.toString() + " mins";
+
+    if (dayDiff > 0) {
+        if (dayDiff == 1) {
+            displayDate = "1 day";
+        }
+        else {
+            displayDate = dayDiff.toString() + " days";
+        }
+    }
+    else if (hourDiff > 0) {
+        displayDate = hourDiff.toString() + " hrs";
+    }
+
+    return {'display':displayDate, 'day': dayDiff, 'hour': hourDiff, 'minute': minuteDiff};
+}
+
 function getAddresses(activity) {
 // get the address from the long/lat coordinates
     var addressURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+activity["meet_location_lat"]+","+activity["meet_location_long"]+"&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
@@ -135,31 +165,8 @@ function getAddresses(activity) {
         success: function(input) {
             address = input.results[0].formatted_address;
             // the date is formatted differently in the database
-            var splitEventDate = activity["start_date_time"].split("T");
-            var splitDate = splitEventDate[0].split("-");
-            var splitTime = splitEventDate[1].split(":");
-            var getCurrDate = new Date();
-
-            // calculate minute, hour, and day difference
-            var minuteDiff = parseInt(splitTime[1]) - getCurrDate.getMinutes();
-            var hourDiff = parseInt(splitTime[0]) - getCurrDate.getHours();
-            var dayDiff = parseInt(splitDate[2]) - getCurrDate.getDate();
-
-            // by default, the time is in minutes
-
-            var displayDate = minuteDiff.toString() + " mins";
-
-            if (dayDiff > 0) {
-                if (dayDiff == 1) {
-                    displayDate = "1 day";
-                }
-                else {
-                    displayDate = dayDiff.toString() + " days";
-                }
-            }
-            else if (hourDiff > 0) {
-                displayDate = hourDiff.toString() + " hrs";
-            }
+            var date_data = getTimeUntil(activity);
+            var displayDate = date_data.display
 
             // get host user
             var user_img = "http://graph.facebook.com/" + activity["creator"]["fb_toke"] + "/picture";
@@ -191,7 +198,7 @@ function getAddresses(activity) {
             activity['address'] = address
 
             var static_img_url = "https://maps.googleapis.com/maps/api/streetview?size=200x200&location=" + activity.meet_location_lat + "," + activity.meet_location_long
-            if (dayDiff > 0 || (dayDiff == 0 && hourDiff > 0)) {
+            if (date_data.day > 0 || (date_data.day == 0 && date_data.hour > 0)) {
                 $("#activities-list").append(
                 '<li id="activities" class="swipeout">' +
                 "<a href='sampleevent.html' class='item-link item-content' data-context='" + JSON.stringify(activity) + "'>" +
@@ -245,7 +252,21 @@ myApp.onPageInit('home', function (page) {
      });
 });
 
-function getNewsfeed(activity) {
+function getDisplayDate(activity) {
+    var splitEventDate = activity["start_date_time"].split("T");
+    var splitDate = splitEventDate[0].split("-");
+    var splitTime = splitEventDate[1].split(":");
+    var getCurrDate = new Date();
+
+    // calculate minute, hour, and day difference
+    var minuteDiff = parseInt(splitTime[1]) - getCurrDate.getMinutes();
+    var hourDiff = parseInt(splitTime[0]) - getCurrDate.getHours();
+    var dayDiff = parseInt(splitDate[2]) - getCurrDate.getDate();
+
+    return splitDate[1] + "/" + splitDate[2] + "/" + splitDate[0].slice(2,4);
+}
+
+function getNewsfeed(activity, selector) {
 // get the address from the long/lat coordinates
     var addressURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+activity["meet_location_lat"]+","+activity["meet_location_long"]+"&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
     var address = addressURL;
@@ -254,23 +275,18 @@ function getNewsfeed(activity) {
         url: addressURL,
         crossDomain: true,
         success: function(input) {
-            address = input.results[0].formatted_address;
+            if (input.status == "ZERO_RESULTS") {
+                address = "Area 51";
+            } else {
+                address = input.results[0].formatted_address;
+            }
             // the date is formatted differently in the database
-            var splitEventDate = activity["start_date_time"].split("T");
-            var splitDate = splitEventDate[0].split("-");
-            var splitTime = splitEventDate[1].split(":");
-            var getCurrDate = new Date();
-
-            // calculate minute, hour, and day difference
-            var minuteDiff = parseInt(splitTime[1]) - getCurrDate.getMinutes();
-            var hourDiff = parseInt(splitTime[0]) - getCurrDate.getHours();
-            var dayDiff = parseInt(splitDate[2]) - getCurrDate.getDate();
-
-            var displayDate = splitDate[2] + "/" + splitDate[1];
+            var displayDate = getDisplayDate(activity);
 
             var user_img = "http://graph.facebook.com/" + activity["creator"]["fb_toke"] + "/picture";
 
-            activity['timeuntil'] = displayDate;
+            var date_data = getTimeUntil(activity);
+            activity['timeuntil'] = date_data.display;
             activity['address'] = address;
 
             // get other users
@@ -293,8 +309,8 @@ function getNewsfeed(activity) {
                 pstring = pstring + "attended! </div>";
             }
 
-            if (dayDiff < 0 || (dayDiff == 0 && hourDiff <= 0 && minuteDiff <= 0)) {
-                $("#newsfeed-list").append(
+            if (date_data.day < 0 || (date_data.day == 0 && date_data.hour <= 0 && date_data.minute <= 0)) {
+                $(selector).append(
                 '<li id="activities" class="swipeout">' +
                 "<a href='sampleevent.html' class='item-link item-content' data-context='" + JSON.stringify(activity) + "'>" +
                 '<div class="swipeout-content">' +
@@ -337,7 +353,7 @@ myApp.onPageInit('newsfeed', function (page) {
        success: function(data) {
         for (var i = 0; i < data.length; i++) {
             var activity = data[i];
-            getNewsfeed(activity);
+            getNewsfeed(activity, "#newsfeed-list");
         }
        },
        dataType: "json"
@@ -381,8 +397,10 @@ myApp.onPageInit('leaderboard', function (page) {
 
 });
 
-function load_profile_tabs(tabClass, posts) {
-    
+function load_profile_tabs(selector, posts) {
+    for (var i = 0; i < posts.length; i++) {
+        getNewsfeed(posts[i], selector);
+    }
 }
 
 myApp.onPageInit('profile', function (page) {
@@ -402,7 +420,8 @@ myApp.onPageInit('profile', function (page) {
         url: profile_url,
         crossDomain: true,
         success: function(data) {
-
+            load_profile_tabs("#profile-personal", data.personal_activities);
+            load_profile_tabs("#joined-profile", data.joined_activities);
         },
         dataType: "json"
      });
@@ -410,6 +429,9 @@ myApp.onPageInit('profile', function (page) {
     $(".profile-tab").click(function() {
         $(".profile-tab.active").removeClass("active");
         $(this).addClass("active");
+
+        $(".profile-feed.active").removeClass("active");
+        $("." + $(this).attr("data-tab")).addClass("active");
     });
 });
 
