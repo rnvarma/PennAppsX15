@@ -106,7 +106,6 @@ myApp.onPageInit('create', function (page) {
                                 meet_location_long: position.coords.longitude,
                                 id: USER_DATA.fb_toke
                             };
-                        console.log(data);
                         $$.post("http://pennappsx15.herokuapp.com/1/activity", data, function(d) {
                             console.log("reply: "+d);
                             alert("Your activity was successfully created!");
@@ -156,8 +155,6 @@ function getAddresses(activity) {
 
             activity['timeuntil'] = displayDate;
             activity['address'] = address
-
-            console.log(activity);
 
             var static_img_url = "https://maps.googleapis.com/maps/api/streetview?size=200x200&location=" + activity.meet_location_lat + "," + activity.meet_location_long
 
@@ -280,6 +277,21 @@ myApp.onPageInit('sampleevent', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+    var lat = parseFloat($(".lattitude").attr("data-lat"));
+    var lng = parseFloat($(".longitude").attr("data-long"));
+
+    var latlong = new google.maps.LatLng(lat, lng);
+    var mapOptions = {
+      center: latlong,
+      zoom: 12
+    };
+    var map = new google.maps.Map(document.getElementById('event-map-div'), mapOptions);
+    var marker = new google.maps.Marker({
+        position: latlong,
+        title:"Starting Point",
+        draggable:false
+    });
+    marker.setMap(map);
 });
 
 
