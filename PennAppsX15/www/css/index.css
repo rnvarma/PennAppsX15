@@ -245,5 +245,16 @@ a .join {
     margin-left: 0px;
 }
 
+.event-status-button {
+    color: black !important;
+    border-color: white;
+    width: 90%;
+    margin-left: 5%;
+    background: white !important;
+}
+
+.event-status-button:focus {
+    outline: 0;
+}
 
 
