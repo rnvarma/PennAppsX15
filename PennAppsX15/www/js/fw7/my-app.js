@@ -217,12 +217,86 @@ myApp.onPageInit('home', function (page) {
      });
 });
 
+function getNewsfeed(activity) {
+// get the address from the long/lat coordinates
+    var addressURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+activity["meet_location_lat"]+","+activity["meet_location_long"]+"&key=AIzaSyAH-KSfz-462dVd84424pUVWa7vO2RgfAs";
+    var address = addressURL;
+
+    $.ajax({
+        url: addressURL,
+        crossDomain: true,
+        success: function(input) {
+            address = input.results[0].formatted_address;
+            // the date is formatted differently in the database
+            var splitEventDate = activity["start_date_time"].split("T");
+            var splitDate = splitEventDate[0].split("-");
+            var splitTime = splitEventDate[1].split(":");
+            var getCurrDate = new Date();
+
+            // calculate minute, hour, and day difference
+            var minuteDiff = parseInt(splitTime[1]) - getCurrDate.getMinutes();
+            var hourDiff = parseInt(splitTime[0]) - getCurrDate.getHours();
+            var dayDiff = parseInt(splitDate[2]) - getCurrDate.getDate();
+
+            var displayDate = splitEventDate[0];
+
+            var user_img = "http://graph.facebook.com/" + activity["creator"]["fb_toke"] + "/picture";
+
+            activity['timeuntil'] = displayDate;
+            activity['address'] = address;
+
+            if (dayDiff <= 0 && hourDiff <= 0 && minuteDiff <= 0) {
+                $("#newsfeed-list").append(
+                '<li id="activities" class="swipeout">' +
+                "<a href='sampleevent.html' class='item-link item-content' data-context='" + JSON.stringify(activity) + "'>" +
+                '<div class="swipeout-content">' +
+                '<!-- List element goes here -->' +
+                '<div class="item-content">' +
+                '   <div class="item-media" id="user-post" style="background-image: url('+ user_img + ');"></div>' +
+                '       <div class="item-inner">' +
+                '           <div class="item-title-row">' +
+                '               <div class="item-title">'+ activity.name + '</div>' +
+                '               <div class="item-after"><b>' + displayDate + '</b></div>' +
+                '           </div>' +
+                '<div class="item-subtitle"><i class="fa fa-map-marker"></i> '+ address + '</div>' +
+                '    <div class="item-text">' +
+                '      +3 attended!' +
+                '    </div>' +
+                '  </div>' +
+                '</div>' + 
+                '</div>' +
+                ' <!-- Swipeout actions left -->' +
+                '   <div class="swipeout-actions-right">' +
+                '        <a href="#" class="join">Join</a>' +
+                '   </div>' +
+                '   </a>' +
+                '</li>')
+            }
+        },
+        dataType:"json"
+    });
+}
+
 myApp.onPageInit('newsfeed', function (page) {
     addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+
+    activitiesURL = "http://pennappsx15.herokuapp.com/1/getactivities/" + USER_DATA.fb_toke;
+
+    $.ajax({
+       url: activitiesURL,
+       crossDomain: true,
+       success: function(data) {
+        for (var i = 0; i < data.length; i++) {
+            var activity = data[i];
+            getNewsfeed(activity);
+        }
+       },
+       dataType: "json"
+     });
 });
 
 function getCompetitors(activity,number) {
@@ -301,6 +375,28 @@ myApp.onPageInit('sampleevent', function (page) {
         createContentPage();
     });
 
+    // Initialize map
+    var lat = parseFloat($(".lattitude").attr("data-lat"));
+    var lng = parseFloat($(".longitude").attr("data-long"));
+
+    var latlong = new google.maps.LatLng(lat, lng);
+    var mapOptions = {
+      center: latlong,
+      zoom: 18,
+      draggable:false,
+      scrollwheel:false,
+      disableDoubleClickZoom: true,
+      disableDefaultUI: true
+    };
+    var map = new google.maps.Map(document.getElementById('event-map-div'), mapOptions);
+    var marker = new google.maps.Marker({
+        position: latlong,
+        title:"Starting Point",
+    });
+    marker.setMap(map);
+
+    var coords = [new google.maps.LatLng(lat, lng)];
+
     var time = getStartTimeFromFormattedThing($(".data-activity-time").attr("data-time"));
     $(".activity-start-time").text("Start time: " + time);
 
@@ -320,6 +416,18 @@ myApp.onPageInit('sampleevent', function (page) {
         refreshIntervalId = setInterval(function() {
             var newLocation = updateUserLocation(function (data) {
                 locations.push(data);
+                
+                // Update map
+                coords.push(new google.maps.LatLng(data.lat, data.lng));
+                var path = new google.maps.Polyline({
+                    path: coords,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.7,
+                    strokeWeight: 2
+                });
+                path.setMap(map);
+
                 console.log(data);
                 routeString += "|" + data.lat + "," + data.lng;
 
@@ -328,7 +436,7 @@ myApp.onPageInit('sampleevent', function (page) {
                     // data contains the distance traveled in the activity so far
                 });
             }, $$(".activity-id").attr("data-id"));
-        }, 30000);
+        }, 10000);
 
         // Set button action to be able to End timer
         $$("#status").append('Activity in progress! Click to end.');
@@ -352,7 +460,6 @@ myApp.onPageInit('sampleevent', function (page) {
         $$('#start').off('click', endTimer);
         $$('#start').on('click', startTimer);
     }
-
     // Initialize timer
     $$('#start').on('click', startTimer);
 
@@ -381,26 +488,6 @@ myApp.onPageInit('sampleevent', function (page) {
             });
         });
     }
-
-    // stuff to get the event page map
-    var lat = parseFloat($(".lattitude").attr("data-lat"));
-    var lng = parseFloat($(".longitude").attr("data-long"));
-
-    var latlong = new google.maps.LatLng(lat, lng);
-    var mapOptions = {
-      center: latlong,
-      zoom: 12,
-      draggable:false,
-      scrollwheel:false,
-      disableDoubleClickZoom: true,
-      disableDefaultUI: true
-    };
-    var map = new google.maps.Map(document.getElementById('event-map-div'), mapOptions);
-    var marker = new google.maps.Marker({
-        position: latlong,
-        title:"Starting Point",
-    });
-    marker.setMap(map);
 });
 
 
