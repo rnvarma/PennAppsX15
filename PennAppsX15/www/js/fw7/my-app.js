@@ -195,6 +195,7 @@ function getAddresses(activity) {
 }
 
 myApp.onPageInit('home', function (page) {
+
     addRefreshListener();
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
@@ -321,19 +322,23 @@ myApp.onPageInit('leaderboard', function (page) {
     var localURL = "http://pennappsx15.herokuapp.com/1/getleaderboard/" + USER_DATA.fb_toke;
 
     $.ajax({
-    url: localURL,
-    crossDomain: true,
-    success: function(data) {
-        neighbors = data.sort(function(a,b) { return a["distance_traveled"] - b["distance_traveled"] } );
-        for (var i = 0; i < neighbors.length; i++) {
-            var neighbor = neighbors[i];
-            getCompetitors(neighbor,i+1);
-        }
-    },
-    dataType: "json"
+        url: localURL,
+        crossDomain: true,
+        success: function(data) {
+            neighbors = data.sort(function(a,b) { return a["distance_traveled"] - b["distance_traveled"] } );
+            for (var i = 0; i < neighbors.length; i++) {
+                var neighbor = neighbors[i];
+                getCompetitors(neighbor,i+1);
+            }
+        },
+        dataType: "json"
     });
 
 });
+
+function load_profile_tabs(tabClass, posts) {
+    
+}
 
 myApp.onPageInit('profile', function (page) {
     addRefreshListener();
@@ -346,10 +351,21 @@ myApp.onPageInit('profile', function (page) {
     var img_url = "http://graph.facebook.com/" + id + "/picture?width=200&height=200";
     $(".fb-img").attr("src", img_url);
 
+    var profile_url = "http://pennappsx15.herokuapp.com/1/user/" + USER_DATA.fb_toke;
+
+    $.ajax({
+        url: profile_url,
+        crossDomain: true,
+        success: function(data) {
+
+        },
+        dataType: "json"
+     });
+
     $(".profile-tab").click(function() {
         $(".profile-tab.active").removeClass("active");
         $(this).addClass("active");
-    })
+    });
 });
 
 function getStartTimeFromFormattedThing(thing) {
