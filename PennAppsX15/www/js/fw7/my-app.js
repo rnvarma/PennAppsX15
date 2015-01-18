@@ -266,7 +266,6 @@ myApp.onPageInit('sampleevent', function (page) {
                     type: 'start'
                 }, function(d) {
                                 console.log("reply: "+d);
-                                alert("Your activity is !");
                 });
             
             console.log("Starting timer!");
@@ -312,7 +311,6 @@ myApp.onPageInit('sampleevent', function (page) {
                     type: 'complete'
                 }, function(d) {
                                 console.log("reply: "+d);
-                                alert("Your activity is !");
                 });
 
             console.log("Stopping timer!");
