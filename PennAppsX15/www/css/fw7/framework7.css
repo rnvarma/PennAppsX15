@@ -1783,10 +1783,10 @@ html:not(.watch-active-state) .list-block .item-link:active .item-inner,
 .list-block .item-text {
   font-size: 15px;
   color: #8e8e93;
-  line-height: 21px;
+  /*line-height: 21px;*/
   position: relative;
   overflow: hidden;
-  height: 42px;
+  /*height: 42px;*/
   text-overflow: ellipsis;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;

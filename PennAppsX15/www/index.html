@@ -34,7 +34,7 @@
         <div class="navbar">
           <div class="navbar-inner">
             <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-            <div class="center sliding"><img src="img/wego.png" alt=""></div>
+            <div class="center"><img src="img/wego.png" alt=""></div>
             <div class="right">
               <!-- 
                 Right link contains only icon - additional "icon-only" class
@@ -49,16 +49,20 @@
           <!-- Page, "data-page" contains page name -->
           <div data-page="index" class="page">
             <!-- Scrollable page content -->
-            <div class="page-content">
-              <p>Page content goes here</p>
-              <div id="fb-root"></div>
-              <fb:login-button data-size="xlarge" scope="public_profile,email" onlogin="checkLoginState();">
+            <div class="page-content" style="background:url(../img/stockphoto.png) no-repeat; background-position:30% 0%;height:100%;background-size:auto 100%;">
+              <div style="margin-top:525px;text-align:center;">
+              <!--<div id="fb-root"></div>-->
+              <fb:login-button size="xlarge"
+                               onlogin="require('./log').info('onlogin callback')">
+                Login with Facebook
               </fb:login-button>
+              <!--<fb:login-button data-size="xlarge" scope="public_profile,email" onlogin="checkLoginState();"></div>
+              </fb:login-button>-->
               <div id="status">
               </div>
-              <!-- Link to another page -->
-              <a href="about.html">About app</a>
             </div>
+            </div>
+          </p>
           </div>
         </div>
         <!-- Bottom Toolbar-->

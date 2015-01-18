@@ -150,13 +150,42 @@ function getAddresses(activity) {
             var displayDate = minuteDiff.toString() + " mins";
 
             if (dayDiff > 0) {
-                displayDate = dayDiff.toString() + " days";
+                if (dayDiff == 1) {
+                    displayDate = "1 day";
+                }
+                else {
+                    displayDate = dayDiff.toString() + " days";
+                }
             }
             else if (hourDiff > 0) {
                 displayDate = hourDiff.toString() + " hrs";
             }
 
+            // get host user
             var user_img = "http://graph.facebook.com/" + activity["creator"]["fb_toke"] + "/picture";
+
+            // get other users
+            var numOfParticipants = activity.participants.length;
+            var parDiff = numOfParticipants-3;
+            var pstring = '';
+            for (var i = 0; i < 3; i++) { // maximum three shown
+                if (i >= numOfParticipants) {
+                    break;
+                }
+                pstring = pstring + '<img src="http://graph.facebook.com/' + activity.participants[i]["fb_toke"] + '/picture" class="xs" align="center">';
+            };
+            if (parDiff > 0) {
+                pstring = pstring + "and " + parDiff.toString() + " more";
+            }
+            else if (numOfParticipants == 1) {
+                pstring = pstring + "is attending"
+            }
+            else if (numOfParticipants == 0) {
+                pstring = "Be the first to join";
+            }
+            else {
+                pstring = pstring + "are attending"
+            }
 
             activity['timeuntil'] = displayDate;
             activity['address'] = address
@@ -173,11 +202,10 @@ function getAddresses(activity) {
                 '       <div class="item-inner">' +
                 '           <div class="item-title-row">' +
                 '               <div class="item-title">'+ activity.name + '</div>' +
-                '               <div class="item-after"><b>' + displayDate + '</b></div>' +
+                '               <div class="item-after"><b>in ' + displayDate + '</b></div>' +
                 '           </div>' +
                 '<div class="item-subtitle"><i class="fa fa-map-marker"></i> '+ address + '</div>' +
-                '    <div class="item-text">' +
-                '      +3 are going!' +
+                '    <div class="item-text" id="att">' + pstring +
                 '    </div>' +
                 '  </div>' +
                 '</div>' + 
@@ -237,12 +265,32 @@ function getNewsfeed(activity) {
             var hourDiff = parseInt(splitTime[0]) - getCurrDate.getHours();
             var dayDiff = parseInt(splitDate[2]) - getCurrDate.getDate();
 
-            var displayDate = splitEventDate[0];
+            var displayDate = splitDate[2] + "/" + splitDate[1];
 
             var user_img = "http://graph.facebook.com/" + activity["creator"]["fb_toke"] + "/picture";
 
             activity['timeuntil'] = displayDate;
             activity['address'] = address;
+
+            // get other users
+            var numOfParticipants = activity.participants.length;
+            var parDiff = numOfParticipants-3;
+            var pstring = '<div class="item-text" id="att">';
+            for (var i = 0; i < 3; i++) { // maximum three shown
+                if (i >= numOfParticipants) {
+                    break;
+                }
+                pstring = pstring + '<img src="http://graph.facebook.com/' + activity.participants[i]["fb_toke"] + '/picture" class="xs" align="center">';
+            };
+            if (parDiff > 0) {
+                pstring = pstring + "and " + parDiff.toString() + " more attended!</div>";
+            }
+            else if (numOfParticipants == 0) {
+                pstring = "";
+            }
+            else {
+                pstring = pstring + "attended! </div>";
+            }
 
             if (dayDiff < 0 || (dayDiff == 0 && hourDiff <= 0 && minuteDiff <= 0)) {
                 $("#newsfeed-list").append(
@@ -258,9 +306,6 @@ function getNewsfeed(activity) {
                 '               <div class="item-after"><b>' + displayDate + '</b></div>' +
                 '           </div>' +
                 '<div class="item-subtitle"><i class="fa fa-map-marker"></i> '+ address + '</div>' +
-                '    <div class="item-text">' +
-                '      +3 attended!' +
-                '    </div>' +
                 '  </div>' +
                 '</div>' + 
                 '</div>' +
@@ -372,6 +417,7 @@ myApp.onPageInit('sampleevent', function (page) {
     // run createContentPage func after link was clicked
     $$('.create-page').on('click', function () {
         createContentPage();
+        myApp.hideNavbar();
     });
 
     // Initialize map
