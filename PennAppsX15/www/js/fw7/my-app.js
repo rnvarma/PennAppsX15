@@ -194,61 +194,6 @@ myApp.onPageInit('home', function (page) {
        },
        dataType: "json"
      });
-
-    // Helper functions to turn timer on/off
-    var routeString = "";
-    var refreshIntervalId; // id for time interval
-    function startTimer() {
-
-        /*
-        $$.post("http://pennappsx15.herokuapp.com/1/activitypoints", data, function(d) {
-                            console.log("reply: "+d);
-                            alert("Your activity was successfully created!");
-                        });
-        */
-        console.log("Starting timer!");
-        // create array to store locations
-        var locations = [];
-        updateUserLocation(function (data) {
-            locations.push(data);
-            routeString = "|" + data.lat + "," + data.lng;
-            console.log(data);
-        });
-        // Start interval
-        refreshIntervalId = setInterval(function() {
-            var newLocation = updateUserLocation(function (data) {
-                locations.push(data);
-                console.log(data);
-                routeString += "|" + data.lat + "," + data.lng;
-                $$('#static-map').attr("src", routeMap(routeString));
-                /*
-                $$.post("http://pennappsx15.herokuapp.com/1/activitypoints", data, function(d) {
-                            console.log("reply: "+d);
-                            alert("Your activity was successfully created!");
-                });
-                */
-            });
-        }, 30000);
-
-        // Set button action to be able to End timer
-        $$("#status").append('Activity in progress! Click to end.');
-        $$("#start").html('End');
-        $$('#start').off('click', startTimer);
-        $$('#start').on('click', endTimer);
-    }
-    function endTimer() {
-        console.log("Stopping timer!");
-        clearInterval(refreshIntervalId); // Clear interval
-        // Set button action to be able to End timer
-        
-        $$("#status").html('Congratulations! You just completed ___ miles.');
-        $$("#start").remove('End');
-        $$('#start').off('click', endTimer);
-        $$('#start').on('click', startTimer);
-    }
-    
-    // Initialize timer
-    $$('#start').on('click', startTimer);
 });
 
 myApp.onPageInit('newsfeed', function (page) {
@@ -281,6 +226,60 @@ myApp.onPageInit('sampleevent', function (page) {
     $$('.create-page').on('click', function () {
         createContentPage();
     });
+    // Helper functions to turn timer on/off
+        var routeString = "";
+        var refreshIntervalId; // id for time interval
+        function startTimer() {
+
+            /*
+            $$.post("http://pennappsx15.herokuapp.com/1/activitypoints", data, function(d) {
+                                console.log("reply: "+d);
+                                alert("Your activity was successfully created!");
+                            });
+            */
+            console.log("Starting timer!");
+            // create array to store locations
+            var locations = [];
+            updateUserLocation(function (data) {
+                locations.push(data);
+                routeString = "|" + data.lat + "," + data.lng;
+                console.log(data);
+            });
+            // Start interval
+            refreshIntervalId = setInterval(function() {
+                var newLocation = updateUserLocation(function (data) {
+                    locations.push(data);
+                    console.log(data);
+                    routeString += "|" + data.lat + "," + data.lng;
+                    $$('#static-map').attr("src", routeMap(routeString));
+                    /*
+                    $$.post("http://pennappsx15.herokuapp.com/1/activitypoints", data, function(d) {
+                                console.log("reply: "+d);
+                                alert("Your activity was successfully created!");
+                    });
+                    */
+                });
+            }, 30000);
+
+            // Set button action to be able to End timer
+            $$("#status").append('Activity in progress! Click to end.');
+            $$("#start").html('End');
+            $$('#start').off('click', startTimer);
+            $$('#start').on('click', endTimer);
+        }
+        function endTimer() {
+            console.log("Stopping timer!");
+            clearInterval(refreshIntervalId); // Clear interval
+            // Set button action to be able to End timer
+            
+            $$("#status").html('Congratulations! You just completed ___ miles.');
+            $$("#start").remove('End');
+            $$('#start').off('click', endTimer);
+            $$('#start').on('click', startTimer);
+        }
+        
+        // Initialize timer
+        $$('#start').on('click', startTimer);
 });
 
 
